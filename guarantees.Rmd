@@ -1,10 +1,10 @@
 ---
-title: "PAINEL DE GARANTIAS "
+title: "GUARANTEES PANEL"
 runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     navbar:
-      - { title: "Data: 30/04/2020",icon: ion-ios-calendar-outline, href: "http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas" ,align: right }
+      - { title: "Position: 04/30/2020",icon: ion-ios-calendar-outline, href: "https://www.gov.br/tesouronacional/en/federal-public-debt" ,align: right }
     orientation: columns
     vertical_layout: fill
     
@@ -131,7 +131,7 @@ numero <- function(x){
 ```
 
 
-Quadro Geral
+Main Chart
 =======================================================================
 
 Column
@@ -153,7 +153,7 @@ agrupador_formatado_geral <- agrupador_total %>%
                        interna_total = numero(interna_total),
                        interna_USD = numero(interna_USD),
                        externa_total = numero(externa_total)
-                ) 
+                          ) 
 
 linha_entidade_geral <- which(agrupador_formatado_geral$Inicio=="Entidades Estaduais Controladas")
 
@@ -172,6 +172,15 @@ agrupador_ATM_geral_formatado[paste0(linha_entidade_ATM),1] <- "Entidades Contro
 
 agrupador_ATM_geral_formatado[1,1] <- "Total"
 
+agrupador_ATM_geral_formatado <- agrupador_ATM_geral_formatado %>%
+  mutate(Inicio_ingles = Inicio)
+
+agrupador_ATM_geral_formatado[2,11] <- "States"
+agrupador_ATM_geral_formatado[3,11] <- "Municipalities"
+agrupador_ATM_geral_formatado[4,11] <- "Federal Banks"
+agrupador_ATM_geral_formatado[5,11] <- "Controlled Entities"
+agrupador_ATM_geral_formatado[6,11] <- "Federal SOE"
+
 
 agrupador_custo_geral_formatado <- agrupador_custo_completo %>%
                  filter((Inicio %in% grupos_geral)) %>%
@@ -183,6 +192,15 @@ agrupador_custo_geral_formatado[paste0(linha_entidade_custo),1] <- "Entidades Co
 
 agrupador_custo_geral_formatado[1,1] <- "Total"
 
+agrupador_custo_geral_formatado <- agrupador_custo_geral_formatado %>%
+  mutate(Inicio_ingles = Inicio)
+
+agrupador_custo_geral_formatado[2,12] <- "States"
+agrupador_custo_geral_formatado[3,12] <- "Municipalities"
+agrupador_custo_geral_formatado[4,12] <- "Federal Banks"
+agrupador_custo_geral_formatado[5,12] <- "Controlled Entities"
+agrupador_custo_geral_formatado[6,12] <- "Federal SOE"
+
 agrupador_percentual_vincendo_geral_formatado <- agrupador_percentual_vincendo %>%
                  filter((Inicio %in% grupos_geral)) 
 
@@ -191,7 +209,24 @@ linha_entidade_percentual_vincendo <- which(agrupador_percentual_vincendo_geral_
 agrupador_percentual_vincendo_geral_formatado[paste0(linha_entidade_percentual_vincendo),1] <- "Entidades Controladas"
 
 agrupador_percentual_vincendo_geral_formatado[1,1] <- "Total"
+
+agrupador_percentual_vincendo_geral_formatado <- agrupador_percentual_vincendo_geral_formatado %>%
+  mutate(Inicio_ingles = Inicio)
+
+agrupador_percentual_vincendo_geral_formatado[2,19] <- "States"
+agrupador_percentual_vincendo_geral_formatado[3,19] <- "Municipalities"
+agrupador_percentual_vincendo_geral_formatado[4,19] <- "Federal Banks"
+agrupador_percentual_vincendo_geral_formatado[5,19] <- "Controlled Entities"
+agrupador_percentual_vincendo_geral_formatado[6,19] <- "Federal SOE"
                  
+agrupador_formatado_geral <- agrupador_formatado_geral %>%
+  mutate(Inicio_ingles = Inicio)
+
+agrupador_formatado_geral[2,43] <- "States"
+agrupador_formatado_geral[3,43] <- "Municipalities"
+agrupador_formatado_geral[4,43] <- "Federal Banks"
+agrupador_formatado_geral[5,43] <- "Controlled Entities"
+agrupador_formatado_geral[6,43] <- "Federal SOE"
 
 
 ```
@@ -200,12 +235,14 @@ agrupador_percentual_vincendo_geral_formatado[1,1] <- "Total"
 
 mutuarios_geral <- c("Total","Estados","Municipios","Bancos Federais","Estatais Federais","Entidades Controladas")
 
+mutuarios_geral_ingles <- c("Total","States","Municipalities","Federal Banks","Federal SOE","Controlled Entities")
+
 fluidPage(
 fluidRow(
   column(5,div(selectInput("Geral", 
                      label="",
                      
-                 choices = (mutuarios_geral)), id="geral"))
+                 choices = (mutuarios_geral_ingles)), id="geral"))
 
 ))
 
@@ -217,7 +254,7 @@ fluidRow(
   
   observeEvent(botoes_geral(),{
   
-    if (is.null(input$Geral)){entrada <- agrupador_formatado_geral$Inicio[1]} 
+    if (is.null(input$Geral)){entrada <- agrupador_formatado_geral$Inicio_ingles[1]} 
     else
     {entrada <- input$Geral}
   
@@ -226,7 +263,7 @@ fluidRow(
   
           filtro_geral <- agrupador_formatado_geral %>%
   
-            filter(Inicio == entrada) }
+            filter(Inicio_ingles == entrada) }
 
  })
  
@@ -246,16 +283,16 @@ fluidPage(
   
   column(width=6,align="center",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
   
-   column(width=3,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Milhões")),
+   column(width=3,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Million")),
    br(),
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","OPERAÇÕES GARANTIDAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","TOTAL GUARANTEED DEBT")),
   
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_Total_geral"))),
   
        br(), 
   
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","INTERNAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","DOMESTIC")),
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_geral"))),
   
@@ -263,7 +300,7 @@ fluidPage(
       br(),
  
  
-  column(width=6,align="center",div(style = "height:17px;color: #737373;background-color: ;","Internas Cambiais:")),
+  column(width=6,align="center",div(style = "height:17px;color: #737373;background-color: ;","FX-Linked:")),
   
   column(width=3,align="right",div(style = "height:17px;color: #737373;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_cambial_geral"))),
   
@@ -271,61 +308,61 @@ fluidPage(
    br(),
   
  
-  column(width=5,align="right",div(style = "height:17px;color: #737373;background-color: ;","Internas Demais   :")),
+  column(width=5,align="center",div(style = "height:17px;color: #737373;background-color: ;"," Other:")),
   column(width=1,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
  
   column(width=3,align="right",div(style = "height:17px;color: #737373;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_demais_geral"))),
   
  br(), 
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","EXTERNAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","EXTERNAL")),
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;background-color: ;",textOutput("Garantia_externa_geral"))),
   
       br(), br(),
-  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","VIDA MÉDIA - ATM")),
+  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","ATM")),
   column(width=4,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_ATM_geral"))),
       br(),br(),
-  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","CUSTO MÉDIO")),
+  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","AVERAGE COST")),
   column(width=4,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_custo_geral"))),
       br(),br(),
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","PERCENTUAL VINCENDO")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","Maturity Profile")),
   column(width=2,align="center",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
       
-  column(width=4,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Milhões")),
+  column(width=4,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Million")),
   br(),
   
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","12 meses")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","12 months")),
   
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_12_meses_percentual_geral"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_12_meses_geral"))),
          
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","1 a 2 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","1 to 2 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_1_ano_percentual_geral"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_1_ano_geral"))),
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","2 a 3 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","2 to 3 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_2_ano_percentual_geral"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_2_ano_geral"))),
   
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","3 a 4 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","3 to 4 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_3_ano_percentual_geral"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_3_ano_geral"))),
   
   br(),
   
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","4 a 5 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","4 to 5 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_4_ano_percentual_geral"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_4_ano_geral"))),
   
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","Mais 5 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","More 5 yrs")),
   column(width=6,align="right",div(style = "height:17px;;background-color: ;",textOutput("Garantia_5_ano_percentual_geral"))),
          
   column(width=3,align="right",div(style = "height:17px;;background-color: ;",textOutput("Garantia_5_ano_geral")))
@@ -374,7 +411,7 @@ Garantia_Vincendo_reativo_geral <- reactive({
 
          filtro_classificador_geral <- agrupador_formatado_geral %>%
           
-           filter(Inicio == entrada) }
+           filter(Inicio_ingles == entrada) }
    
 
    
@@ -403,9 +440,9 @@ observeEvent(Garantia_ATM_reativo_geral(),{
 
          filtro_classificador_geral_atm <- agrupador_ATM_geral_formatado %>%
 
-                      filter(Inicio == entrada) }
+                      filter(Inicio_ingles == entrada) }
 
-  output$Garantia_ATM_geral <- renderText(paste0(str_replace_all(round(filtro_classificador_geral_atm$ATM_Total,2),"\\.",","), " anos"))
+  output$Garantia_ATM_geral <- renderText(paste0(str_replace_all(round(filtro_classificador_geral_atm$ATM_Total,2),"\\.",","), " years"))
   
 })
   
@@ -422,9 +459,9 @@ observeEvent(Garantia_ATM_reativo_geral(),{
 
          filtro_classificador_geral_custo <- agrupador_custo_geral_formatado %>%
 
-                      filter(Inicio == entrada) }
+                      filter(Inicio_ingles == entrada) }
 
-  output$Garantia_custo_geral <- renderText(paste0(filtro_classificador_geral_custo$Custo_Total, " a.a"))
+  output$Garantia_custo_geral <- renderText(paste0(filtro_classificador_geral_custo$Custo_Total, " p.a"))
   
 
  })
@@ -441,7 +478,7 @@ observeEvent(Garantia_ATM_reativo_geral(),{
    if(entrada != "all"){
 
          filtro_classificador_geral_vincendo <- agrupador_percentual_vincendo_geral_formatado %>%
-                      filter(Inicio == entrada) }
+                      filter(Inicio_ingles == entrada) }
 
   output$Garantia_12_meses_geral <- renderText(paste0(funcao_formata_quantidade(numero(filtro_classificador_geral_vincendo$Ate_12_meses))))
   
@@ -478,7 +515,7 @@ observeEvent(Garantia_ATM_reativo_geral(),{
 Column {.tabset}
 -----------------------------------------------------------------------
 
-### Operações Garantidas 
+### Guaranteed Debt 
 
  
 ```{r operacoes_garantidas_geral, fig.width=9,echo = FALSE, results = 'asis'}
@@ -491,10 +528,10 @@ y_geral <- barras$total_total[1]
 y_interna <- barras$interna_total[1]
 
 Total <- barras %>%
-        filter(Inicio == "Total")
+        filter(Inicio_ingles == "Total")
 
 Estados <- barras %>%
-          filter(Inicio == "Estados")
+          filter(Inicio_ingles == "States")
 
 Estados_valor <- Estados$total_total
 Estados_valor_interna <- Estados$interna_total
@@ -502,7 +539,7 @@ Estados_valor_externa <- Estados$externa_total
 
 
 Municipios <- barras %>%
-          filter(Inicio == "Municipios")
+          filter(Inicio_ingles == "Municipalities")
 
 Municipios_valor <- Municipios$total_total
 Municipios_valor_interna <- Municipios$interna_total
@@ -510,14 +547,14 @@ Municipios_valor_externa <- Municipios$externa_total
 
 
 Bancos_Federais <- barras %>%
-          filter(Inicio == "Bancos Federais")
+          filter(Inicio_ingles == "Federal Banks")
 
 Bancos_Federais_valor <- Bancos_Federais$total_total
 Bancos_Federais_valor_interna <- Bancos_Federais$interna_total
 Bancos_Federais_valor_externa <- Bancos_Federais$externa_total
 
 Estatais_Federais <- barras %>%
-          filter(Inicio == "Estatais Federais")
+          filter(Inicio_ingles == "Federal SOE")
 
 Estatais_Federais_valor <- Estatais_Federais$total_total
 Estatais_Federais_valor_interna <- Estatais_Federais$interna_total
@@ -525,7 +562,7 @@ Estatais_Federais_valor_externa <- Estatais_Federais$externa_total
 
 
 Entidades_Controladas <- barras %>%
-          filter(Inicio == "Entidades Controladas")
+          filter(Inicio_ingles == "Controlled Entities")
 
 Entidades_Controladas_valor <- Entidades_Controladas$total_total
 Entidades_Controladas_valor_interna <- Entidades_Controladas$interna_total
@@ -539,15 +576,15 @@ cor_reativo_geral_total <- reactive({
  })      
   
 
-cores_gera_total_estados<-reactive({ifelse("Total"== cor_reativo_geral_total() |"Estados"==cor_reativo_geral_total(),"rgb(61, 145, 194)","rgb(191, 191, 191)")})
+cores_gera_total_estados<-reactive({ifelse("Total"== cor_reativo_geral_total() |"States"==cor_reativo_geral_total(),"rgb(61, 145, 194)","rgb(191, 191, 191)")})
 
-cores_gera_total_municipios<-reactive({ifelse("Total"== cor_reativo_geral_total() |"Municipios"==cor_reativo_geral_total(),"rgb(100, 167, 206)","rgb(191, 191, 191)")})
+cores_gera_total_municipios<-reactive({ifelse("Total"== cor_reativo_geral_total() |"Municipalities"==cor_reativo_geral_total(),"rgb(100, 167, 206)","rgb(191, 191, 191)")})
 
-cores_gera_total_bancos_federais<-reactive({ifelse("Total"== cor_reativo_geral_total() |"Bancos Federais"==cor_reativo_geral_total(),"rgb(139, 189, 218)","rgb(191, 191, 191)")})
+cores_gera_total_bancos_federais<-reactive({ifelse("Total"== cor_reativo_geral_total() |"Federal Banks"==cor_reativo_geral_total(),"rgb(139, 189, 218)","rgb(191, 191, 191)")})
 
-cores_gera_total_estatais_federais<-reactive({ifelse("Total"== cor_reativo_geral_total() |"Estatais Federais"==cor_reativo_geral_total(),"rgb(177, 211, 231)","rgb(191, 191, 191)")})
+cores_gera_total_estatais_federais<-reactive({ifelse("Total"== cor_reativo_geral_total() |"Federal SOE"==cor_reativo_geral_total(),"rgb(177, 211, 231)","rgb(191, 191, 191)")})
 
-cores_gera_total_entidades_controladas<-reactive({ifelse("Total"== cor_reativo_geral_total() |"Entidades Controladas"==cor_reativo_geral_total(),"rgb(216, 233, 243)","rgb(191, 191, 191)")})
+cores_gera_total_entidades_controladas<-reactive({ifelse("Total"== cor_reativo_geral_total() |"Controlled Entities"==cor_reativo_geral_total(),"rgb(216, 233, 243)","rgb(191, 191, 191)")})
 
 
 fluidPage(
@@ -557,11 +594,11 @@ fluidRow(
   
   br(), br(),br(), br(),br(), br(),br(), br(),br(), br(),br(), br(),
   
-  column(11,div(style = "font-size: 11pt; font-family: monospace;","OPERAÇÕES GARANTIDAS INTERNAS"),div(style = "font-size: 10pt;",textOutput("nominal_garantia_interna")) ,plotlyOutput("barras_total_interna")),
+  column(11,div(style = "font-size: 11pt; font-family: monospace;","Domestic Guarantees"),div(style = "font-size: 10pt;",textOutput("nominal_garantia_interna")) ,plotlyOutput("barras_total_interna")),
   
   br(),br(),br(), br(),br(), br(),br(), br(),br(), br(),br(), br(),
   
-  column(11,div(style = "font-size: 11pt; font-family: monospace;","OPERAÇÕES GARANTIDAS EXTERNAS"),div(style = "font-size: 10pt;",textOutput("nominal_garantia_externa")),plotlyOutput("barras_total_externa"))
+  column(11,div(style = "font-size: 11pt; font-family: monospace;","External Guarantees"),div(style = "font-size: 10pt;",textOutput("nominal_garantia_externa")),plotlyOutput("barras_total_externa"))
   
 ))
 
@@ -570,39 +607,39 @@ fluidRow(
  plot_ly(barras,y=~y_geral, type = 'bar', 
                  orientation = 'h',  
         
-      x = ~Estados_valor,name = "Estados",
+      x = ~Estados_valor,name = "States",
           showlegend= ifelse(Estados_valor==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_estados(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-       text = ~paste0("<b>Tipo Mutuário:</b> ","Estados","<br><b>Operações Garantidas:</b> ","R$",funcao_formata_quantidade_2(Estados_valor)," Milhões","<br><b>Parcela Total:</b> ",funcao_percentual_taxa(Estados_valor/barras$total_total[1])),              
+       text = ~paste0("<b>Type of Entity:</b> ","States","<br><b>Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Estados_valor)," Million","<br><b>Total Portion:</b> ",funcao_percentual_taxa(Estados_valor/barras$total_total[1])),              
   
   hoverinfo = "text"
       
       
       ) %>%
      
-     add_trace(x = ~Municipios_valor,name ="Municipios",
+     add_trace(x = ~Municipios_valor,name ="Municipalities",
                  showlegend= ifelse(Municipios_valor==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_municipios(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
         
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Municipios","<br><b>Operações Garantidas:</b> ","R$",funcao_formata_quantidade_2(Municipios_valor)," Milhões","<br><b>Parcela Total:</b> ",funcao_percentual_taxa(Municipios_valor/barras$total_total[1])),              
+        text = ~paste0("<b>Type of Entity:</b> ","Municipality","<br><b>Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Municipios_valor)," Million","<br><b>Total Portion:</b> ",funcao_percentual_taxa(Municipios_valor/barras$total_total[1])),              
   
   hoverinfo = "text"
                       ) %>%
   
   
-  add_trace(x = ~Bancos_Federais_valor,name ="Bancos Federais",
+  add_trace(x = ~Bancos_Federais_valor,name ="Federal Banks",
                  showlegend= ifelse(Bancos_Federais_valor==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_bancos_federais(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-                       text = ~paste0("<b>Tipo Mutuário:</b> ","Bancos Federais","<br><b>Operações Garantidas:</b> ","R$",funcao_formata_quantidade_2(Bancos_Federais_valor)," Milhões","<br><b>Parcela Total:</b> ",funcao_percentual_taxa(Bancos_Federais_valor/barras$total_total[1])),              
+                       text = ~paste0("<b>Type of Entity:</b> ","Federal Banks","<br><b>Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Bancos_Federais_valor)," Million","<br><b>Total Portion:</b> ",funcao_percentual_taxa(Bancos_Federais_valor/barras$total_total[1])),              
   
   hoverinfo = "text"
       
@@ -610,26 +647,26 @@ fluidRow(
       ) %>%
                       
                     
-  add_trace(x = ~Estatais_Federais_valor,name ="Estatais Federais",
+  add_trace(x = ~Estatais_Federais_valor,name ="Federal SOE",
                  showlegend= ifelse(Estatais_Federais_valor==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_estatais_federais(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Estatais Federais","<br><b>Operações Garantidas:</b> ","R$",funcao_formata_quantidade_2(Estatais_Federais_valor)," Milhões","<br><b>Parcela Total:</b> ",funcao_percentual_taxa(Estatais_Federais_valor/barras$total_total[1])),              
+        text = ~paste0("<b>Type of Entity:</b> ","Federal SOE","<br><b>Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Estatais_Federais_valor)," Million","<br><b>Total Portion:</b> ",funcao_percentual_taxa(Estatais_Federais_valor/barras$total_total[1])),              
   
   hoverinfo = "text"
         
                       ) %>%
   
-  add_trace(x = ~Entidades_Controladas_valor,name ="Entidades Controladas",
+  add_trace(x = ~Entidades_Controladas_valor,name ="Controlled Entities",
                  showlegend= ifelse(Entidades_Controladas_valor==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_entidades_controladas(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
         
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Entidades Controladas","<br><b>Operações Garantidas:</b> ","R$",funcao_formata_quantidade_2(Entidades_Controladas_valor)," Milhões","<br><b>Parcela Total:</b> ",funcao_percentual_taxa(Entidades_Controladas_valor/barras$total_total[1])),              
+        text = ~paste0("<b>Type of Entity:</b> ","Controlled Entities","<br><b>Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Entidades_Controladas_valor)," Million","<br><b>Total Portion:</b> ",funcao_percentual_taxa(Entidades_Controladas_valor/barras$total_total[1])),              
   
   hoverinfo = "text"
                       ) %>%
@@ -662,39 +699,39 @@ output$barras_total_interna <- renderPlotly({
  plot_ly( type = 'bar', 
                  orientation = 'h', 
         
-      x = ~Estados_valor_interna,name = "Estados",
+      x = ~Estados_valor_interna,name = "States",
                  showlegend= ifelse(Estados_valor_interna==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_estados(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-       text = ~paste0("<b>Tipo Mutuário:</b> ","Estados","<br><b>Operações Garantidas Internas:</b> ","R$",funcao_formata_quantidade_2(Estados_valor_interna)," Milhões"),              
+       text = ~paste0("<b>Type of Entity:</b> ","States","<br><b>Domestic Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Estados_valor_interna)," Million"),              
   
   hoverinfo = "text"
       
       
       ) %>%
     
-    add_trace(x = ~Municipios_valor_interna,name ="Municipios",
+    add_trace(x = ~Municipios_valor_interna,name ="Municipalities",
                  showlegend= ifelse(Municipios_valor_interna==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_municipios(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
         
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Municipios","<br><b>Operações Garantidas Internas:</b> ","R$",funcao_formata_quantidade_2(Municipios_valor_interna)," Milhões"),              
+        text = ~paste0("<b>Type of Entity:</b> ","Municipalities","<br><b>Domestic Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Municipios_valor_interna)," Million"),              
   
   hoverinfo = "text"
                       ) %>%
   
   
-  add_trace(x = ~Bancos_Federais_valor_interna,name ="Bancos Federais",
+  add_trace(x = ~Bancos_Federais_valor_interna,name ="Federal Banks",
                  showlegend= ifelse(Bancos_Federais_valor_interna==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_bancos_federais(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-                       text = ~paste0("<b>Tipo Mutuário:</b> ","Bancos Federais","<br><b>Operações Garantidas Internas:</b> ","R$",funcao_formata_quantidade_2(Bancos_Federais_valor_interna)," Milhões"),              
+                       text = ~paste0("<b>Type of Entity:</b> ","Federal Banks","<br><b>Domestic Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Bancos_Federais_valor_interna)," Million"),              
   
   hoverinfo = "text"
       
@@ -702,26 +739,26 @@ output$barras_total_interna <- renderPlotly({
       ) %>%
                       
                       
-  add_trace(x = ~Estatais_Federais_valor_interna,name ="Estatais Federais",
+  add_trace(x = ~Estatais_Federais_valor_interna,name ="Federal SOE",
                  showlegend= ifelse(Estatais_Federais_valor_interna==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_estatais_federais(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Estatais Federais","<br><b>Operações Garantidas Internas:</b> ","R$",funcao_formata_quantidade_2(Estatais_Federais_valor_interna)," Milhões"),              
+        text = ~paste0("<b>Type of Entity:</b> ","Federal SOE","<br><b>Domestic Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Estatais_Federais_valor_interna)," Million"),              
   
   hoverinfo = "text"
         
                       ) %>%
   
-  add_trace(x = ~Entidades_Controladas_valor_interna,name ="Entidades Controladas",
+  add_trace(x = ~Entidades_Controladas_valor_interna,name ="Controlled Entities",
                  showlegend= ifelse(Entidades_Controladas_valor_interna==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_entidades_controladas(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
         
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Entidades Controladas","<br><b>Operações Garantidas Internas:</b> ","R$",funcao_formata_quantidade_2(Entidades_Controladas_valor_interna)," Milhões"),              
+        text = ~paste0("<b>Type of Entity:</b> ","Controlled Entities","<br><b>Domestic Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Entidades_Controladas_valor_interna)," Million"),              
   
   hoverinfo = "text"
                       ) %>%
@@ -754,39 +791,39 @@ output$barras_total_externa <- renderPlotly({
  plot_ly( type = 'bar', 
                  orientation = 'h', 
         
-      x = ~Estados_valor_externa,name = "Estados",
+      x = ~Estados_valor_externa,name = "States",
                  showlegend= ifelse(Estados_valor_externa==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_estados(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-       text = ~paste0("<b>Tipo Mutuário:</b> ","Estados","<br><b>Operações Garantidas Externas:</b> ","R$",funcao_formata_quantidade_2(Estados_valor_externa)," Milhões"),              
+       text = ~paste0("<b>Type of Entity:</b> ","States","<br><b>External Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Estados_valor_externa)," Million"),              
   
   hoverinfo = "text"
       
       
       ) %>%
     
-    add_trace(x = ~Municipios_valor_externa,name ="Municipios",
+    add_trace(x = ~Municipios_valor_externa,name ="Municipalities",
                  showlegend= ifelse(Municipios_valor_externa==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_municipios(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
         
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Municipios","<br><b>Operações Garantidas Externas:</b> ","R$",funcao_formata_quantidade_2(Municipios_valor_externa)," Milhões"),              
+        text = ~paste0("<b>Type of Entity:</b> ","Municipalities","<br><b>External Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Municipios_valor_externa)," Million"),              
   
   hoverinfo = "text"
                       ) %>%
   
   
-  add_trace(x = ~Bancos_Federais_valor_externa,name ="Bancos Federais",
+  add_trace(x = ~Bancos_Federais_valor_externa,name ="Federal Banks",
                  showlegend= ifelse(Bancos_Federais_valor_externa==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_bancos_federais(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-                       text = ~paste0("<b>Tipo Mutuário:</b> ","Bancos Federais","<br><b>Operações Garantidas Externas:</b> ","R$",funcao_formata_quantidade_2(Bancos_Federais_valor_externa)," Milhões"),              
+                       text = ~paste0("<b>Type of Entity:</b> ","Federal Banks","<br><b>External Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Bancos_Federais_valor_externa)," Million"),              
   
   hoverinfo = "text"
       
@@ -795,26 +832,26 @@ output$barras_total_externa <- renderPlotly({
                       
                     
   
-  add_trace(x = ~Estatais_Federais_valor_externa,name ="Estatais Federais",
+  add_trace(x = ~Estatais_Federais_valor_externa,name ="Federal SOE",
                  showlegend= ifelse(Estatais_Federais_valor_externa==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_estatais_federais(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Estatais Federais","<br><b>Operações Garantidas Externas:</b> ","R$",funcao_formata_quantidade_2(Estatais_Federais_valor_externa)," Milhões"),              
+        text = ~paste0("<b>Type of Entity:</b> ","Federal SOE","<br><b>External Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Estatais_Federais_valor_externa)," Million"),              
   
   hoverinfo = "text"
         
                       ) %>%
   
-  add_trace(x = ~Entidades_Controladas_valor_externa,name ="Entidades Controladas",
+  add_trace(x = ~Entidades_Controladas_valor_externa,name ="Controlled Entities",
                  showlegend= ifelse(Entidades_Controladas_valor_externa==0,FALSE,TRUE), 
       
         marker = list(color = cores_gera_total_entidades_controladas(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
         
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Entidades Controladas","<br><b>Operações Garantidas Externas:</b> ","R$",funcao_formata_quantidade_2(Entidades_Controladas_valor_externa)," Milhões"),              
+        text = ~paste0("<b>Type of Entity:</b> ","Controlled Entities","<br><b>External Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Entidades_Controladas_valor_externa)," Million"),              
   
   hoverinfo = "text"
                       ) %>%
@@ -864,14 +901,14 @@ Quadro_geral_operacoes_garantidas <- reactive({
    if(entrada != "all"){
 
          nominal_percentual_operacoes_total <- agrupador_formatado_geral %>%
-               filter(Inicio == entrada) }
+               filter(Inicio_ingles == entrada) }
    
   
-output$nominal_garantia <- renderText(paste0("R$ ",funcao_formata_quantidade(nominal_percentual_operacoes_total$total_total)," Milhões"," (",funcao_percentual_taxa(nominal_percentual_operacoes_total$total_total/ nominal_percentual_operacoes_total$total_total),")"))
+output$nominal_garantia <- renderText(paste0("R$ ",funcao_formata_quantidade(nominal_percentual_operacoes_total$total_total)," Million"," (",funcao_percentual_taxa(nominal_percentual_operacoes_total$total_total/ nominal_percentual_operacoes_total$total_total),")"))
 
-output$nominal_garantia_interna <- renderText(paste0("R$ ",funcao_formata_quantidade(nominal_percentual_operacoes_total$interna_total)," Milhões"," (",funcao_percentual_taxa(nominal_percentual_operacoes_total$interna_total/ nominal_percentual_operacoes_total$total_total),")"))
+output$nominal_garantia_interna <- renderText(paste0("R$ ",funcao_formata_quantidade(nominal_percentual_operacoes_total$interna_total)," Million"," (",funcao_percentual_taxa(nominal_percentual_operacoes_total$interna_total/ nominal_percentual_operacoes_total$total_total),")"))
 
-output$nominal_garantia_externa <- renderText(paste0("R$ ",funcao_formata_quantidade(nominal_percentual_operacoes_total$externa_total)," Milhões"," (",funcao_percentual_taxa(nominal_percentual_operacoes_total$externa_total/ nominal_percentual_operacoes_total$total_total),")"))
+output$nominal_garantia_externa <- renderText(paste0("R$ ",funcao_formata_quantidade(nominal_percentual_operacoes_total$externa_total)," Million"," (",funcao_percentual_taxa(nominal_percentual_operacoes_total$externa_total/ nominal_percentual_operacoes_total$total_total),")"))
 
 
 })
@@ -881,7 +918,7 @@ output$nominal_garantia_externa <- renderText(paste0("R$ ",funcao_formata_quanti
 
 
 
-### Vida Média - ATM
+### ATM
 
 ```{r atm_geral, fig.width=9,echo = FALSE, results = 'asis'}
 
@@ -893,7 +930,7 @@ barras_atm <- agrupador_ATM_geral_formatado %>%
              
 
 Total_atm <- barras_atm %>%
-        filter(Inicio == "Total")
+        filter(Inicio_ingles == "Total")
 
 Total_valor_atm <- Total_atm$ATM_Total
 
@@ -901,7 +938,7 @@ Total_valor_atm_interna <- Total_atm$ATM_interno
 Total_valor_atm_externa <- Total_atm$ATM_externo
 
 Estados_atm <- barras_atm %>%
-          filter(Inicio == "Estados")
+          filter(Inicio_ingles == "States")
 
 Estados_valor_atm <- Estados_atm$ATM_Total
 Estados_valor_atm_interna <- Estados_atm$ATM_interno
@@ -909,7 +946,7 @@ Estados_valor_atm_externa <- Estados_atm$ATM_externo
 
 
 Municipios_atm <- barras_atm %>%
-          filter(Inicio == "Municipios")
+          filter(Inicio_ingles == "Municipalities")
 
 Municipios_valor_atm <- Municipios_atm$ATM_Total
 Municipios_valor_atm_interna <- Municipios_atm$ATM_interno
@@ -917,7 +954,7 @@ Municipios_valor_atm_externa <- Municipios_atm$ATM_externo
 
 
 Bancos_Federais_atm <- barras_atm %>%
-          filter(Inicio == "Bancos Federais")
+          filter(Inicio_ingles == "Federal Banks")
 
 Bancos_Federais_valor_atm <- Bancos_Federais_atm$ATM_Total
 Bancos_Federais_valor_atm_interna <- Bancos_Federais_atm$ATM_interno
@@ -927,7 +964,7 @@ Bancos_Federais_valor_atm_externa <- Bancos_Federais_atm$ATM_externo
 
 
 Estatais_Federais_atm <- barras_atm %>%
-          filter(Inicio == "Estatais Federais")
+          filter(Inicio_ingles == "Federal SOE")
 
 Estatais_Federais_valor_atm <- Estatais_Federais_atm$ATM_Total
 Estatais_Federais_valor_atm_interna <- Estatais_Federais_atm$ATM_interno
@@ -935,7 +972,7 @@ Estatais_Federais_valor_atm_externa <- Estatais_Federais_atm$ATM_externo
 
 
 Entidades_Controladas_atm <- barras_atm %>%
-          filter(Inicio == "Entidades Controladas")
+          filter(Inicio_ingles == "Controlled Entities")
 
 Entidades_Controladas_atm[is.na(Entidades_Controladas_atm)] <- 0
 
@@ -951,15 +988,15 @@ cor_reativo_geral_atm <- reactive({
 
 cores_geral_atm<-reactive({if("Total"== cor_reativo_geral_atm())
                            {"rgb(103, 169, 207)"}
-                         else if("Estados"==cor_reativo_geral_atm())
+                         else if("States"==cor_reativo_geral_atm())
                          {c("rgb(103, 169, 207)","rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(191, 191, 191)")}
-                         else if("Bancos Federais"==cor_reativo_geral_atm())
+                         else if("Federal Banks"==cor_reativo_geral_atm())
                          {c("rgb(191, 191, 191)","rgb(103, 169, 207)","rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(191, 191, 191)")}                  
-                         else if("Municipios"==cor_reativo_geral_atm())
+                         else if("Municipalities"==cor_reativo_geral_atm())
                          {c("rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(103, 169, 207)","rgb(191, 191, 191)","rgb(191, 191, 191)")} 
-                         else if("Estatais Federais"==cor_reativo_geral_atm())
+                         else if("Federal SOE"==cor_reativo_geral_atm())
                          {c("rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(103, 169, 207)","rgb(191, 191, 191)")}
-                         else if("Entidades Controladas"==cor_reativo_geral_atm())
+                         else if("Controlled Entities"==cor_reativo_geral_atm())
                          {c("rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(103, 169, 207)")}
   
                                            
@@ -967,15 +1004,15 @@ cores_geral_atm<-reactive({if("Total"== cor_reativo_geral_atm())
 
 cores_geral_atm_texto<-reactive({if("Total"== cor_reativo_geral_atm())
                            {c(0.3,0.3,0.3,0.3,0.3)}
-                         else if("Estados"==cor_reativo_geral_atm())
+                         else if("States"==cor_reativo_geral_atm())
                          {c(0.9,0.3,0.3,0.3,0.3)}
-                         else if("Bancos Federais"==cor_reativo_geral_atm())
+                         else if("Federal Banks"==cor_reativo_geral_atm())
                          {c(0.3,0.9,0.3,0.3,0.3)}                  
-                         else if("Municipios"==cor_reativo_geral_atm())
+                         else if("Municipalities"==cor_reativo_geral_atm())
                          {c(0.3,0.3,0.9,0.3,0.3)} 
-                         else if("Estatais Federais"==cor_reativo_geral_atm())
+                         else if("Federal SOE"==cor_reativo_geral_atm())
                          {c(0.3,0.3,0.3,0.9,0.3)}
-                         else if("Entidades Controladas"==cor_reativo_geral_atm())
+                         else if("Controlled Entities"==cor_reativo_geral_atm())
                          {c(0.3,0.3,0.3,0.3,0.9)}
                                                                    })
 
@@ -984,21 +1021,21 @@ fluidPage(
 fluidRow(
   
   
-  column(11,div(style = "font-size: 11pt;font-weight: bold; font-family: monospace;","TOTAL"),div(style = "font-size: 10pt;font-weight: bold;",textOutput("atm_total_percentual")), plotlyOutput("barras_total_atm")),
+  column(11,div(style = "font-size: 11pt;font-weight: bold; font-family: monospace;","TOTAL ATM"),div(style = "font-size: 10pt;font-weight: bold;",textOutput("atm_total_percentual")), plotlyOutput("barras_total_atm")),
   
 
   
   
-  column(11,div(style = "font-size: 11pt;font-family: monospace;","VIDA MÉDIA - ATM INTERNAS"),div(style = "font-size: 10pt;",textOutput("atm_interna_percentual")) ,plotlyOutput("barras_total_atm_interna")),
+  column(11,div(style = "font-size: 11pt;font-family: monospace;","DOMESTIC ATM"),div(style = "font-size: 10pt;",textOutput("atm_interna_percentual")) ,plotlyOutput("barras_total_atm_interna")),
   
   
   
-  column(11,div(style = "font-size: 11pt; font-family: monospace;","VIDA MÉDIA - ATM EXTERNAS"),div(style = "font-size: 10pt;",textOutput("atm_externa_percentual")),plotlyOutput("barras_total_atm_externa"))
+  column(11,div(style = "font-size: 11pt; font-family: monospace;","EXTERNAL ATM"),div(style = "font-size: 10pt;",textOutput("atm_externa_percentual")),plotlyOutput("barras_total_atm_externa"))
   
 ))
 
 
-y_atm <- c("Estados", "Bancos Federais", "Municipios", "Estatais Federais", "Entidades Controladas")
+y_atm <- c("States", "Federal Banks", "Municipalities", "Federal SOE", "Controlled Entities")
 
 data_atm <- c(Estados_valor_atm, Bancos_Federais_valor_atm, Municipios_valor_atm, Estatais_Federais_valor_atm, Entidades_Controladas_valor_atm)
 
@@ -1048,7 +1085,9 @@ output$barras_total_atm <- renderPlotly({
 
  })
 
-y_atm_interna <- c("Estados", "Bancos Federais", "Municipios", "Estatais Federais")
+#tem gambiarra aqui nesse ponto - retiramos Entidades controladas para nao aparecer NA
+
+y_atm_interna <- c("States", "Federal Banks", "Municipalities", "Federal SOE")
 
 
 data_atm_interna <- c(Estados_valor_atm_interna, Bancos_Federais_valor_atm_interna, Municipios_valor_atm_interna, Estatais_Federais_valor_atm_interna)
@@ -1147,16 +1186,16 @@ output$barras_total_atm_externa <- renderPlotly({
 
  })
 
-output$atm_total_percentual <- renderText(paste0(round(Total_valor_atm,2)," anos"))
-output$atm_interna_percentual <- renderText(paste0(round(Total_valor_atm_interna,2)," anos"))
-output$atm_externa_percentual <- renderText(paste0(round(Total_valor_atm_externa,2)," anos"))
+output$atm_total_percentual <- renderText(paste0(round(Total_valor_atm,2)," years"))
+output$atm_interna_percentual <- renderText(paste0(round(Total_valor_atm_interna,2)," years"))
+output$atm_externa_percentual <- renderText(paste0(round(Total_valor_atm_externa,2)," years"))
 
 
   
 ```
 
 
-### Custo Médio
+### Average Cost
 
 ```{r custos_geral, fig.width=9,echo = FALSE, results = 'asis'}
 
@@ -1168,14 +1207,14 @@ barras_custo <- agrupador_custo_geral_formatado %>%
 
 
 Total_custo <- barras_custo %>%
-        filter(Inicio == "Total")
+        filter(Inicio_ingles == "Total")
 
 Total_valor_custo <- Total_custo$Custo_Total_formatado
 Total_valor_custo_interna <- Total_custo$Custo_Interno_formatado
 Total_valor_custo_externa <- Total_custo$Custo_Externo_formatado
 
 Estados_custo <- barras_custo %>%
-          filter(Inicio == "Estados")
+          filter(Inicio_ingles == "States")
 
 Estados_valor_custo <- Estados_custo$Custo_Total_formatado
 Estados_valor_custo_interna <- Estados_custo$Custo_Interno_formatado
@@ -1183,7 +1222,7 @@ Estados_valor_custo_externa <- Estados_custo$Custo_Externo_formatado
 
 
 Municipios_custo <- barras_custo %>%
-          filter(Inicio == "Municipios")
+          filter(Inicio_ingles == "Municipalities")
 
 Municipios_valor_custo <- Municipios_custo$Custo_Total_formatado
 Municipios_valor_custo_interna <- Municipios_custo$Custo_Interno_formatado
@@ -1191,7 +1230,7 @@ Municipios_valor_custo_externa <- Municipios_custo$Custo_Externo_formatado
 
 
 Bancos_Federais_custo <- barras_custo %>%
-          filter(Inicio == "Bancos Federais")
+          filter(Inicio_ingles == "Federal Banks")
 
 Bancos_Federais_valor_custo <- Bancos_Federais_custo$Custo_Total_formatado
 Bancos_Federais_valor_custo_interna <- Bancos_Federais_custo$Custo_Interno_formatado
@@ -1201,7 +1240,7 @@ Bancos_Federais_valor_custo_externa <- Bancos_Federais_custo$Custo_Externo_forma
 
 
 Estatais_Federais_custo <- barras_custo %>%
-          filter(Inicio == "Estatais Federais")
+          filter(Inicio_ingles == "Federal SOE")
 
 Estatais_Federais_valor_custo <- Estatais_Federais_custo$Custo_Total_formatado
 Estatais_Federais_valor_custo_interna <- Estatais_Federais_custo$Custo_Interno_formatado
@@ -1209,7 +1248,7 @@ Estatais_Federais_valor_custo_externa <- Estatais_Federais_custo$Custo_Externo_f
 
 
 Entidades_Controladas_custo <- barras_custo %>%
-          filter(Inicio == "Entidades Controladas")
+          filter(Inicio_ingles == "Controlled Entities")
 
 Entidades_Controladas_custo[is.na(Entidades_Controladas_custo)] <- 0
 
@@ -1226,15 +1265,15 @@ cor_reativo_geral_custo <- reactive({
 
 cores_geral_custo<-reactive({if("Total"== cor_reativo_geral_custo())
                            {"rgb(103, 169, 207)"}
-                         else if("Estados"==cor_reativo_geral_custo())
+                         else if("States"==cor_reativo_geral_custo())
                          {c("rgb(103, 169, 207)","rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(191, 191, 191)")}
-                         else if("Bancos Federais"==cor_reativo_geral_custo())
+                         else if("Federal Banks"==cor_reativo_geral_custo())
                          {c("rgb(191, 191, 191)","rgb(103, 169, 207)","rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(191, 191, 191)")}                  
-                         else if("Municipios"==cor_reativo_geral_custo())
+                         else if("Municipalities"==cor_reativo_geral_custo())
                          {c("rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(103, 169, 207)","rgb(191, 191, 191)","rgb(191, 191, 191)")} 
-                         else if("Estatais Federais"==cor_reativo_geral_custo())
+                         else if("Federal SOE"==cor_reativo_geral_custo())
                          {c("rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(103, 169, 207)","rgb(191, 191, 191)")}
-                         else if("Entidades Controladas"==cor_reativo_geral_custo())
+                         else if("Controlled Entities"==cor_reativo_geral_custo())
                          {c("rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(191, 191, 191)","rgb(103, 169, 207)")}
   
                                            
@@ -1242,15 +1281,15 @@ cores_geral_custo<-reactive({if("Total"== cor_reativo_geral_custo())
 
 cores_geral_custo_texto<-reactive({if("Total"== cor_reativo_geral_custo())
                            {c(0.3,0.3,0.3,0.3,0.3)}
-                         else if("Estados"==cor_reativo_geral_custo())
+                         else if("States"==cor_reativo_geral_custo())
                          {c(0.9,0.3,0.3,0.3,0.3)}
-                         else if("Bancos Federais"==cor_reativo_geral_custo())
+                         else if("Federal Banks"==cor_reativo_geral_custo())
                          {c(0.3,0.9,0.3,0.3,0.3)}                  
-                         else if("Municipios"==cor_reativo_geral_custo())
+                         else if("Municipalities"==cor_reativo_geral_custo())
                          {c(0.3,0.3,0.9,0.3,0.3)} 
-                         else if("Estatais Federais"==cor_reativo_geral_custo())
+                         else if("Federal SOE"==cor_reativo_geral_custo())
                          {c(0.3,0.3,0.3,0.9,0.3)}
-                         else if("Entidades Controladas"==cor_reativo_geral_custo())
+                         else if("Controlled Entities"==cor_reativo_geral_custo())
                          {c(0.3,0.3,0.3,0.3,0.9)}
                                                                    })
 
@@ -1259,21 +1298,21 @@ fluidPage(
 fluidRow(
   
   
-  column(11,div(style = "font-size: 11pt;font-weight: bold; font-family: monospace;","TOTAL"),div(style = "font-size: 10pt;font-weight: bold;",textOutput("custo_total_percentual")), plotlyOutput("barras_total_custo")),
+  column(11,div(style = "font-size: 11pt;font-weight: bold; font-family: monospace;","TOTAL AVERAGE COST"),div(style = "font-size: 10pt;font-weight: bold;",textOutput("custo_total_percentual")), plotlyOutput("barras_total_custo")),
   
 
   
   
-  column(11,div(style = "font-size: 11pt; font-family: monospace;","CUSTO MÉDIO INTERNAS"),div(style = "font-size: 10pt;",textOutput("custo_interna_percentual")) ,plotlyOutput("barras_total_custo_interna")),
+  column(11,div(style = "font-size: 11pt; font-family: monospace;","DOMESTIC AVERAGE COST"),div(style = "font-size: 10pt;",textOutput("custo_interna_percentual")) ,plotlyOutput("barras_total_custo_interna")),
   
   
   
-  column(11,div(style = "font-size: 11pt; font-family: monospace;","CUSTO MÉDIO EXTERNAS"),div(style = "font-size: 10pt;",textOutput("custo_externa_percentual")),plotlyOutput("barras_total_custo_externa"))
+  column(11,div(style = "font-size: 11pt; font-family: monospace;","EXTERNAL AVERAGE COST"),div(style = "font-size: 10pt;",textOutput("custo_externa_percentual")),plotlyOutput("barras_total_custo_externa"))
   
 ))
 
 
-y_custo <- c("Estados", "Bancos Federais", "Municipios", "Estatais Federais", "Entidades Controladas")
+y_custo <- c("States", "Federal Banks", "Municipalities", "Federal SOE", "Controlled Entities")
 
 data_custo <- c(Estados_valor_custo, Bancos_Federais_valor_custo, Municipios_valor_custo, Estatais_Federais_valor_custo, Entidades_Controladas_valor_custo)
 
@@ -1327,7 +1366,9 @@ output$barras_total_custo <- renderPlotly({
 
  })
 
-y_custo_interna <- c("Estados", "Bancos Federais", "Municipios", "Estatais Federais")
+#Tem gambiarra nesse ponto - Retirar Entidades Controladas para nao aparecer NA's
+
+y_custo_interna <- c("States", "Federal Banks", "Municipalities", "Federal SOE")
 
 
 data_custo_interna <- c(Estados_valor_custo_interna, Bancos_Federais_valor_custo_interna, Municipios_valor_custo_interna, Estatais_Federais_valor_custo_interna)
@@ -1424,9 +1465,9 @@ output$barras_total_custo_externa <- renderPlotly({
 
  })
 
-output$custo_total_percentual <- renderText(paste0(Total_valor_custo," % a.a"))
-output$custo_interna_percentual <- renderText(paste0(Total_valor_custo_interna," % a.a"))
-output$custo_externa_percentual <- renderText(paste0(Total_valor_custo_externa," % a.a"))
+output$custo_total_percentual <- renderText(paste0(Total_valor_custo," % per annum"))
+output$custo_interna_percentual <- renderText(paste0(Total_valor_custo_interna," % per annum"))
+output$custo_externa_percentual <- renderText(paste0(Total_valor_custo_externa," % per annum"))
 
 
 
@@ -1434,7 +1475,7 @@ output$custo_externa_percentual <- renderText(paste0(Total_valor_custo_externa,"
 
 
 
-### Operações Garantidas Cambiais
+### Total FX-Linked 
 
 ```{r operacoes_garantidas_geral_cambial, fig.width=9,echo = FALSE, results = 'asis'}
 
@@ -1447,10 +1488,10 @@ y_geral_cambial <- barras$total_cambial[1]
 
 
 Total_cambial <- barras_cambial %>%
-        filter(Inicio == "Total")
+        filter(Inicio_ingles == "Total")
 
 Estados_cambial <- barras_cambial %>%
-          filter(Inicio == "Estados")
+          filter(Inicio_ingles == "States")
 
 Estados_valor_cambial <- Estados_cambial$total_cambial
 Estados_valor_interna_cambial <- Estados_cambial$interna_USD
@@ -1458,7 +1499,7 @@ Estados_valor_externa_cambial <- Estados_cambial$externa_total
 
 
 Municipios_cambial <- barras_cambial %>%
-          filter(Inicio == "Municipios")
+          filter(Inicio_ingles == "Municipalities")
 
 Municipios_valor_cambial <- Municipios_cambial$total_cambial
 Municipios_valor_interna_cambial <- Municipios_cambial$interna_USD
@@ -1466,7 +1507,7 @@ Municipios_valor_externa_cambial <- Municipios_cambial$externa_total
 
 
 Bancos_Federais_cambial <- barras_cambial %>%
-          filter(Inicio == "Bancos Federais")
+          filter(Inicio_ingles == "Federal Banks")
 
 Bancos_Federais_valor_cambial <- Bancos_Federais_cambial$total_cambial
 Bancos_Federais_valor_interna_cambial <- Bancos_Federais_cambial$interna_USD
@@ -1476,7 +1517,7 @@ Bancos_Federais_valor_externa_cambial <- Bancos_Federais_cambial$externa_total
 
 
 Estatais_Federais_cambial <- barras_cambial %>%
-          filter(Inicio == "Estatais Federais")
+          filter(Inicio_ingles == "Federal SOE")
 
 Estatais_Federais_valor_cambial <- Estatais_Federais_cambial$total_cambial
 Estatais_Federais_valor_interna_cambial <- Estatais_Federais_cambial$interna_USD
@@ -1484,7 +1525,7 @@ Estatais_Federais_valor_externa_cambial <- Estatais_Federais_cambial$externa_tot
 
 
 Entidades_Controladas_cambial <- barras_cambial %>%
-          filter(Inicio == "Entidades Controladas")
+          filter(Inicio_ingles == "Controlled Entities")
 
 Entidades_Controladas_valor_cambial <- Entidades_Controladas_cambial$total_cambial
 Entidades_Controladas_valor_interna_cambial <- Entidades_Controladas_cambial$interna_USD
@@ -1498,15 +1539,15 @@ cor_reativo_geral_total_cambial <- reactive({
  })      
   
 
-cores_gera_total_estados_cambial<-reactive({ifelse("Total"== cor_reativo_geral_total_cambial() |"Estados"==cor_reativo_geral_total_cambial(),"rgb(61, 145, 194)","rgb(191, 191, 191)")})
+cores_gera_total_estados_cambial<-reactive({ifelse("Total"== cor_reativo_geral_total_cambial() |"States"==cor_reativo_geral_total_cambial(),"rgb(61, 145, 194)","rgb(191, 191, 191)")})
 
-cores_gera_total_municipios_cambial<-reactive({ifelse("Total"== cor_reativo_geral_total_cambial() |"Municipios"==cor_reativo_geral_total_cambial(),"rgb(100, 167, 206)","rgb(191, 191, 191)")})
+cores_gera_total_municipios_cambial<-reactive({ifelse("Total"== cor_reativo_geral_total_cambial() |"Municipalities"==cor_reativo_geral_total_cambial(),"rgb(100, 167, 206)","rgb(191, 191, 191)")})
 
-cores_gera_total_bancos_federais_cambial<-reactive({ifelse("Total"== cor_reativo_geral_total_cambial() |"Bancos Federais"==cor_reativo_geral_total_cambial(),"rgb(139, 189, 218)","rgb(191, 191, 191)")})
+cores_gera_total_bancos_federais_cambial<-reactive({ifelse("Total"== cor_reativo_geral_total_cambial() |"Federal Banks"==cor_reativo_geral_total_cambial(),"rgb(139, 189, 218)","rgb(191, 191, 191)")})
 
-cores_gera_total_estatais_federais_cambial<-reactive({ifelse("Total"== cor_reativo_geral_total_cambial() |"Estatais Federais"==cor_reativo_geral_total_cambial(),"rgb(177, 211, 231)","rgb(191, 191, 191)")})
+cores_gera_total_estatais_federais_cambial<-reactive({ifelse("Total"== cor_reativo_geral_total_cambial() |"Federal SOE"==cor_reativo_geral_total_cambial(),"rgb(177, 211, 231)","rgb(191, 191, 191)")})
 
-cores_gera_total_entidades_controladas_cambial<-reactive({ifelse("Total"== cor_reativo_geral_total_cambial() |"Entidades Controladas"==cor_reativo_geral_total_cambial(),"rgb(216, 233, 243)","rgb(191, 191, 191)")})
+cores_gera_total_entidades_controladas_cambial<-reactive({ifelse("Total"== cor_reativo_geral_total_cambial() |"Controlled Entities"==cor_reativo_geral_total_cambial(),"rgb(216, 233, 243)","rgb(191, 191, 191)")})
 
 
 fluidPage(
@@ -1516,11 +1557,11 @@ fluidRow(
   
   br(), br(),br(), br(),br(), br(),br(), br(),br(), br(),br(), br(),
   
-  column(11,div(style = "font-size: 11pt; font-family: monospace;","OPERAÇÕES INTERNAS CAMBIAIS"),div(style = "font-size: 10pt;",textOutput("nominal_garantia_interna_cambiais")) ,plotlyOutput("barras_total_interna_cambial")),
+  column(11,div(style = "font-size: 11pt; font-family: monospace;","DOMESTIC FX-LINKED"),div(style = "font-size: 10pt;",textOutput("nominal_garantia_interna_cambiais")) ,plotlyOutput("barras_total_interna_cambial")),
   
   br(),br(),br(), br(),br(), br(),br(), br(),br(), br(),br(), 
   
-  column(11,div(style = "font-size: 11pt; font-family: monospace;","OPERAÇÕES EXTERNAS"),div(style = "font-size: 10pt;",textOutput("nominal_garantia_externa_cambiais")),plotlyOutput("barras_total_externa_cambial"))
+  column(11,div(style = "font-size: 11pt; font-family: monospace;","EXTERNAL"),div(style = "font-size: 10pt;",textOutput("nominal_garantia_externa_cambiais")),plotlyOutput("barras_total_externa_cambial"))
   
 ))
 
@@ -1529,13 +1570,13 @@ fluidRow(
  p <- plot_ly(barras_cambial, type = 'bar', traceorder ="reversed") %>%
                   
         
-     add_trace( x = ~Estados_valor_cambial,name = "Estados",
+     add_trace( x = ~Estados_valor_cambial,name = "States",
                  showlegend= ifelse(Estados_valor_cambial==0,FALSE,TRUE),
             
         marker = list(color = cores_gera_total_estados_cambial(),
                       line = list(color ="rgb(242, 242, 242)",
                                   width = 3)),
-       text = ~paste0("<b>Tipo Mutuário:</b> ","Estados","<br><b>Operações Cambiais:</b> ","R$",funcao_formata_quantidade_2(Estados_valor_cambial)," Milhões","<br><b>Parcela Cambiais:</b> ",funcao_percentual_taxa(Estados_valor_cambial/Estados_valor)),              
+       text = ~paste0("<b>Type of Entity:</b> ","States","<br><b>FX-Lienked Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Estados_valor_cambial)," Million","<br><b>Portion FX-Linked:</b> ",funcao_percentual_taxa(Estados_valor_cambial/Estados_valor)),              
               
   
   hoverinfo = "text"
@@ -1543,66 +1584,66 @@ fluidRow(
       
       ) %>%
      
-     add_trace(x = ~Municipios_valor_cambial,name ="Municipios",
+     add_trace(x = ~Municipios_valor_cambial,name ="Municipalities",
                showlegend= ifelse(Municipios_valor_cambial==0,FALSE,TRUE),
              
         marker = list(color = cores_gera_total_municipios_cambial(),
                       line = list(color ="rgb(242, 242, 242)",
                                   width = 3)),
         
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Municipios","<br><b>Operações Cambiais:</b> ","R$",funcao_formata_quantidade_2(Municipios_valor_cambial)," Milhões","<br><b>Parcela Cambiais:</b> ",funcao_percentual_taxa(Municipios_valor_cambial/Municipios_valor)),              
+        text = ~paste0("<b>Type of Entity:</b> ","Municipalities","<br><b>FX-Lienked Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Municipios_valor_cambial)," Million","<br><b>Portion FX-Linked:</b> ",funcao_percentual_taxa(Municipios_valor_cambial/Municipios_valor)),              
   
   hoverinfo = "text"
                       ) %>%
      
-     add_trace(x = ~Bancos_Federais_valor_cambial,name ="Bancos Federais",
+     add_trace(x = ~Bancos_Federais_valor_cambial,name ="Federal Banks",
                 showlegend= ifelse(Bancos_Federais_valor_cambial==0,FALSE,TRUE),
                
         marker = list(color = cores_gera_total_bancos_federais_cambial(),
                       line = list(color ="rgb(242, 242, 242)",
                                   width = 3)),
-                       text = ~paste0("<b>Tipo Mutuário:</b> ","Bancos Federais","<br><b>Operações Cambiais:</b> ","R$",funcao_formata_quantidade_2(Bancos_Federais_valor_cambial)," Milhões","<br><b>Parcela Cambiais:</b> ",funcao_percentual_taxa(Bancos_Federais_valor_cambial/Bancos_Federais_valor)),              
+                       text = ~paste0("<b>Type of Entity:</b> ","Federal Banks","<br><b>FX-Lienked Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Bancos_Federais_valor_cambial)," Milhões","<br><b>Portion FX-Linked:</b> ",funcao_percentual_taxa(Bancos_Federais_valor_cambial/Bancos_Federais_valor)),              
   
   hoverinfo = "text"
       
       
       ) %>%
      
-  add_trace(x = ~Estatais_Federais_valor_cambial,name ="Estatais Federais",
+  add_trace(x = ~Estatais_Federais_valor_cambial,name ="Federal SOE",
                 showlegend= ifelse(Estatais_Federais_valor_cambial==0,FALSE,TRUE),
                
         marker = list(color = cores_gera_total_estatais_federais_cambial(),
                       line = list(color ="rgb(242, 242, 242)",
                                   width = 3)),
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Estatais Federais","<br><b>Operações Cambiais:</b> ","R$",funcao_formata_quantidade_2(Estatais_Federais_valor_cambial)," Milhões","<br><b>Parcela Cambiais:</b> ",funcao_percentual_taxa(Estatais_Federais_valor_cambial/Estatais_Federais_valor)),              
+        text = ~paste0("<b>Type of Entity:</b> ","Federal SOE","<br><b>FX-Lienked Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Estatais_Federais_valor_cambial)," Million","<br><b>Portion FX-Linked:</b> ",funcao_percentual_taxa(Estatais_Federais_valor_cambial/Estatais_Federais_valor)),              
   
   hoverinfo = "text"
         
                       ) %>%
   
   
-  add_trace(x = ~Entidades_Controladas_valor_cambial,name ="Entidades Controladas",
+  add_trace(x = ~Entidades_Controladas_valor_cambial,name ="Controlled Entities",
                  showlegend= ifelse(Entidades_Controladas_valor_cambial==0,FALSE,TRUE),
                
         marker = list(color = cores_gera_total_entidades_controladas_cambial(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
         
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Entidades Controladas","<br><b>Operações Cambiais:</b> ","R$",funcao_formata_quantidade_2(Entidades_Controladas_valor_cambial)," Milhões","<br><b>Parcela Cambiais:</b> ",funcao_percentual_taxa(Entidades_Controladas_valor_cambial/Entidades_Controladas_valor)),              
+        text = ~paste0("<b>Type of Entity:</b> ","Controlled Entities","<br><b>FX-Lienked Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Entidades_Controladas_valor_cambial)," Million","<br><b>Portion FX-Linked:</b> ",funcao_percentual_taxa(Entidades_Controladas_valor_cambial/Entidades_Controladas_valor)),              
   
   hoverinfo = "text"
       
       ) %>%
      
      
-     add_trace(x = ~(Total_cambial$total_total-Total_cambial$total_cambial),name ="Não Cambiais",
+     add_trace(x = ~(Total_cambial$total_total-Total_cambial$total_cambial),name ="No FX-Linked",
                  showlegend=FALSE,
                
         marker = list(opacity= 0.4, color = "rgb(31, 73, 97)",
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
         
-        text = ~paste0("<b>Operações Não Cambiais</b> ","<br><b>Total:</b> ","R$",funcao_formata_quantidade_2(Total_cambial$total_total-Total_cambial$total_cambial)," Milhões","<br><b>Parcela Total:</b> ",funcao_percentual_taxa((Total_cambial$total_total-Total_cambial$total_cambial)/Total_cambial$total_total)),              
+        text = ~paste0("<b>No FX-Linked Guaranteed Debt</b> ","<br><b>Total:</b> ","R$",funcao_formata_quantidade_2(Total_cambial$total_total-Total_cambial$total_cambial)," Milion","<br><b>Portion of Total:</b> ",funcao_percentual_taxa((Total_cambial$total_total-Total_cambial$total_cambial)/Total_cambial$total_total)),              
   
   hoverinfo = "text"
       
@@ -1630,7 +1671,7 @@ fluidRow(
      
   add_annotations(xref = 'paper', yref = 'paper',
                   x = 0.97, y = 0.5,
-                  text = "NÃO CAMBIAIS",
+                  text = "No Fx-Linked",
                   font = list(family = 'Arial', size = 12,
                               color = "rgb(217, 217, 217)"),
                   showarrow = FALSE) %>%   
@@ -1647,38 +1688,38 @@ output$barras_total_interna_cambial <- renderPlotly({
  
  plot_ly(type = 'bar',orientation = 'h', 
         
-      x = ~Estados_valor_interna_cambial,name = "Estados",
+      x = ~Estados_valor_interna_cambial,name = "States",
       showlegend= ifelse(Estados_valor_interna_cambial==0,FALSE,TRUE),
                  
         marker = list(color = cores_gera_total_estados_cambial(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-       text = ~paste0("<b>Tipo Mutuário:</b> ","Estados","<br><b>Operações Internas Cambiais:</b> ","R$",funcao_formata_quantidade_2(Estados_valor_interna_cambial)," Milhões"),              
+       text = ~paste0("<b>Type of Entity:</b> ","States","<br><b>Domestic FX-Linked Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Estados_valor_interna_cambial)," Million"),              
   
   hoverinfo = "text"
       
       
       ) %>%
     
-    add_trace(x = ~Municipios_valor_interna_cambial,name ="Municipios",
+    add_trace(x = ~Municipios_valor_interna_cambial,name ="Municipalities",
              showlegend= ifelse(Municipios_valor_interna_cambial==0,FALSE,TRUE),
           
         marker = list(color = cores_gera_total_municipios_cambial(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
         
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Municipios","<br><b>Operações Internas Cambiais:</b> ","R$",funcao_formata_quantidade_2(Municipios_valor_interna_cambial)," Milhões"),              
+        text = ~paste0("<b>Type of Entity:</b> ","Municipalities","<br><b>Domestic FX-Linked Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Municipios_valor_interna_cambial)," Million"),              
   
   hoverinfo = "text"
                       ) %>%
   
-  add_trace(x = ~Bancos_Federais_valor_interna_cambial,name ="Bancos Federais",
+  add_trace(x = ~Bancos_Federais_valor_interna_cambial,name ="Federal Banks",
             showlegend= ifelse(Bancos_Federais_valor_interna_cambial==0,FALSE,TRUE),
                  
         marker = list(color = cores_gera_total_bancos_federais_cambial(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-                       text = ~paste0("<b>Tipo Mutuário:</b> ","Bancos Federais","<br><b>Operações Internas Cambiais:</b> ","R$",funcao_formata_quantidade_2(Bancos_Federais_valor_interna_cambial)," Milhões"),              
+                       text = ~paste0("<b>Type of Entity:</b> ","Federal Banks","<br><b>Domestic FX-Linked Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Bancos_Federais_valor_interna_cambial)," Million"),              
   
   hoverinfo = "text"
       
@@ -1686,27 +1727,27 @@ output$barras_total_interna_cambial <- renderPlotly({
       ) %>%
                       
   
-  add_trace(x = ~Estatais_Federais_valor_interna_cambial,name ="Estatais Federais",
+  add_trace(x = ~Estatais_Federais_valor_interna_cambial,name ="Federal SOE",
                 showlegend= ifelse(Estatais_Federais_valor_interna_cambial==0,FALSE,TRUE),
             
         marker = list(color = cores_gera_total_estatais_federais_cambial(),
                       
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Estatais Federais","<br><b>Operações Internas Cambiais:</b> ","R$",funcao_formata_quantidade_2(Estatais_Federais_valor_interna_cambial)," Milhões"),              
+        text = ~paste0("<b>Type of Entity:</b> ","Federal SOE","<br><b>Domestic FX-Linked Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Estatais_Federais_valor_interna_cambial)," Million"),              
   
   hoverinfo = "text"
         
                       ) %>%
   
-  add_trace(x = ~Entidades_Controladas_valor_interna_cambial,name ="Entidades Controladas",
+  add_trace(x = ~Entidades_Controladas_valor_interna_cambial,name ="Controlled Entities",
                  showlegend= ifelse(Entidades_Controladas_valor_interna_cambial==0,FALSE,TRUE),
             
         marker = list(color = cores_gera_total_entidades_controladas_cambial(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
         
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Entidades Controladas","<br><b>Operações Internas Cambiais:</b> ","R$",funcao_formata_quantidade_2(Entidades_Controladas_valor_interna_cambial)," Milhões"),              
+        text = ~paste0("<b>Type of Entity:</b> ","Controlled Entities","<br><b>Domestic FX-Linked Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Entidades_Controladas_valor_interna_cambial)," Million"),              
   
   hoverinfo = "text"
                       ) %>%
@@ -1739,38 +1780,38 @@ output$barras_total_externa_cambial <- renderPlotly({
  plot_ly( type = 'bar') %>%
                   
         
-     add_trace( x = ~Estados_valor_externa_cambial,name = "Estados",
+     add_trace( x = ~Estados_valor_externa_cambial,name = "States",
                  showlegend= ifelse(Estados_valor_externa_cambial==0,FALSE,TRUE),
                
         marker = list(color = cores_gera_total_estados_cambial(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-       text = ~paste0("<b>Tipo Mutuário:</b> ","Estados","<br><b>Operações Externas:</b> ","R$",funcao_formata_quantidade_2(Estados_valor_externa_cambial)," Milhões"),              
+       text = ~paste0("<b>Type of Entity:</b> ","States","<br><b>External Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Estados_valor_externa_cambial)," Million"),              
   
   hoverinfo = "text"
       
       
       ) %>%
     
-    add_trace(x = ~Municipios_valor_externa_cambial,name ="Municipios",
+    add_trace(x = ~Municipios_valor_externa_cambial,name ="Municipalities",
                 showlegend= ifelse(Municipios_valor_externa_cambial==0,FALSE,TRUE),
                 
         marker = list(color = cores_gera_total_municipios_cambial(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
         
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Municipios","<br><b>Operações Externas:</b> ","R$",funcao_formata_quantidade_2(Municipios_valor_externa_cambial)," Milhões"),              
+        text = ~paste0("<b>Type of Entity:</b> ","Municipalities","<br><b>External Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Municipios_valor_externa_cambial)," Million"),              
   
   hoverinfo = "text"
                       ) %>%
   
-  add_trace(x = ~Bancos_Federais_valor_externa_cambial,name ="Bancos Federais",
+  add_trace(x = ~Bancos_Federais_valor_externa_cambial,name ="Federal Banks",
                  showlegend= ifelse(Bancos_Federais_valor_externa_cambial==0,FALSE,TRUE),
                 
         marker = list(color = cores_gera_total_bancos_federais_cambial(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-                       text = ~paste0("<b>Tipo Mutuário:</b> ","Bancos Federais","<br><b>Operações Externas:</b> ","R$",funcao_formata_quantidade_2(Bancos_Federais_valor_externa_cambial)," Milhões"),              
+                       text = ~paste0("<b>Type of Entity:</b> ","Federal Banks","<br><b>External Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Bancos_Federais_valor_externa_cambial)," Million"),              
   
   hoverinfo = "text"
       
@@ -1778,26 +1819,26 @@ output$barras_total_externa_cambial <- renderPlotly({
       ) %>%
                       
                       
-  add_trace(x = ~Estatais_Federais_valor_externa_cambial,name ="Estatais Federais",
+  add_trace(x = ~Estatais_Federais_valor_externa_cambial,name ="Federal SOE",
                showlegend= ifelse(Estatais_Federais_valor_externa_cambial==0,FALSE,TRUE),
                   
         marker = list(color = cores_gera_total_estatais_federais_cambial(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Estatais Federais","<br><b>Operações Externas:</b> ","R$",funcao_formata_quantidade_2(Estatais_Federais_valor_externa_cambial)," Milhões"),              
+        text = ~paste0("<b>Type of Entity:</b> ","Federal SOE","<br><b>External Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Estatais_Federais_valor_externa_cambial)," Million"),              
   
   hoverinfo = "text"
         
                       ) %>%
   
-  add_trace(x = ~Entidades_Controladas_valor_externa_cambial,name ="Entidades Controladas",
+  add_trace(x = ~Entidades_Controladas_valor_externa_cambial,name ="Controlled Entities",
               showlegend= ifelse(Entidades_Controladas_valor_externa_cambial==0,FALSE,TRUE),
                   
         marker = list(color = cores_gera_total_entidades_controladas_cambial(),
                       line = list(color = "rgb(242, 242, 242)",
                                   width = 3)),
         
-        text = ~paste0("<b>Tipo Mutuário:</b> ","Entidades Controladas","<br><b>Operações Externas:</b> ","R$",funcao_formata_quantidade_2(Entidades_Controladas_valor_externa_cambial)," Milhões"),              
+        text = ~paste0("<b>Type of Entity:</b> ","Controlled Entities","<br><b>External Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(Entidades_Controladas_valor_externa_cambial)," Million"),              
   
   hoverinfo = "text"
                       ) %>%
@@ -1845,14 +1886,14 @@ Quadro_geral_operacoes_garantidas_cambiais <- reactive({
    if(entrada != "all"){
 
          nominal_percentual_operacoes_total_cambiais <- agrupador_formatado_geral %>%
-               filter(Inicio == entrada) }
+               filter(Inicio_ingles == entrada) }
    
   
-output$nominal_garantia_cambiais <- renderText(paste0("R$ ",funcao_formata_quantidade(nominal_percentual_operacoes_total_cambiais$interna_USD+nominal_percentual_operacoes_total_cambiais$externa_total)," Milhões"," (",funcao_percentual_taxa((nominal_percentual_operacoes_total_cambiais$interna_USD+nominal_percentual_operacoes_total_cambiais$externa_total)/ nominal_percentual_operacoes_total_cambiais$total_total),")"))
+output$nominal_garantia_cambiais <- renderText(paste0("R$ ",funcao_formata_quantidade(nominal_percentual_operacoes_total_cambiais$interna_USD+nominal_percentual_operacoes_total_cambiais$externa_total)," Million"," (",funcao_percentual_taxa((nominal_percentual_operacoes_total_cambiais$interna_USD+nominal_percentual_operacoes_total_cambiais$externa_total)/ nominal_percentual_operacoes_total_cambiais$total_total),")"))
 
-output$nominal_garantia_interna_cambiais <- renderText(paste0("R$ ",funcao_formata_quantidade(nominal_percentual_operacoes_total_cambiais$interna_USD)," Milhões"," (",funcao_percentual_taxa(nominal_percentual_operacoes_total_cambiais$interna_USD/ (nominal_percentual_operacoes_total_cambiais$interna_USD+nominal_percentual_operacoes_total_cambiais$externa_total)),")"))
+output$nominal_garantia_interna_cambiais <- renderText(paste0("R$ ",funcao_formata_quantidade(nominal_percentual_operacoes_total_cambiais$interna_USD)," Million"," (",funcao_percentual_taxa(nominal_percentual_operacoes_total_cambiais$interna_USD/ (nominal_percentual_operacoes_total_cambiais$interna_USD+nominal_percentual_operacoes_total_cambiais$externa_total)),")"))
 
-output$nominal_garantia_externa_cambiais <- renderText(paste0("R$ ",funcao_formata_quantidade(nominal_percentual_operacoes_total_cambiais$externa_total)," Milhões"," (",funcao_percentual_taxa(nominal_percentual_operacoes_total_cambiais$externa_total/ (nominal_percentual_operacoes_total_cambiais$interna_USD+nominal_percentual_operacoes_total_cambiais$externa_total)),")"))
+output$nominal_garantia_externa_cambiais <- renderText(paste0("R$ ",funcao_formata_quantidade(nominal_percentual_operacoes_total_cambiais$externa_total)," Million"," (",funcao_percentual_taxa(nominal_percentual_operacoes_total_cambiais$externa_total/ (nominal_percentual_operacoes_total_cambiais$interna_USD+nominal_percentual_operacoes_total_cambiais$externa_total)),")"))
 
 
 })
@@ -1877,29 +1918,29 @@ Quadro_geral_operacoes_garantidas_nome <- reactive({
 
          total_texto <- "" 
                 }
-   if(entrada == "Estados"){
+   if(entrada == "States"){
 
-         total_texto <- "dos Estados" 
+         total_texto <- "of States" 
                 }
-   if(entrada == "Municipios"){
+   if(entrada == "Municipalities"){
 
-         total_texto <- "dos Municipios" 
+         total_texto <- "of Municipalities" 
                 }
-   if(entrada == "Bancos Federais"){
+   if(entrada == "Federal Banks"){
 
-         total_texto <- "dos Bancos Federais" 
+         total_texto <- "of Federal Banks" 
                 }
-   if(entrada == "Estatais Federais"){
+   if(entrada == "Federal SOE"){
 
-         total_texto <- "das Estatais Federais" 
+         total_texto <- "of Federal SOE" 
                 }
-   if(entrada == "Entidades Controladas"){
+   if(entrada == "Controlled Entities"){
 
-         total_texto <- "das Entidades Controladas" 
+         total_texto <- "of Controlled Entities" 
                 }
    
   
-output$texto_garantia_cambiais <- renderText(paste0("Operações Cambiais (Internas Cambiais + Externa) no Total de Operações Garantidas " ,total_texto))
+output$texto_garantia_cambiais <- renderText(paste0("Total FX-Linked (Domestic FX-Linked + External) participation in Guaranteed Debt " ,total_texto))
 
 
 
@@ -1910,7 +1951,7 @@ output$texto_garantia_cambiais <- renderText(paste0("Operações Cambiais (Inter
 
 
 
-Estados
+States
 =======================================================================
 
 Column 
@@ -2010,29 +2051,29 @@ fluidPage(
  fluidRow(
    br(), 
    
-   column(width=2,align="left",div(style = "height:40px;font-size: 13pt;font-weight: bold;background-color: ;","CAPAG")),
+   column(width=7,align="left",div(style = "height:40px;font-size: 13pt;font-weight: bold;background-color: ;","INTERNAL CREDIT RATING (CAPAG)")),
   column(width=1,align="center",div(style = "height:40px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Capag"))),
   br(), br(),
   
   column(width=6,align="center",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
   
-   column(width=3,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Milhões")),
+   column(width=3,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Million")),
    br(),
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","OPERAÇÕES GARANTIDAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","TOTAL GUARANTEED DEBT")),
   
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_Total_2"))),
   
        br(), 
   
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","INTERNAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","DOMESTIC")),
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_2"))),
   
       br(),
  
  
-  column(width=6,align="center",div(style = "height:17px;color: #737373;background-color: ;","Internas Cambiais:")),
+  column(width=6,align="center",div(style = "height:17px;color: #737373;background-color: ;","FX-Linked:")),
   
   column(width=3,align="right",div(style = "height:17px;color: #737373;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_cambial_2"))),
   
@@ -2040,60 +2081,60 @@ fluidPage(
    br(),
   
  
-  column(width=5,align="right",div(style = "height:17px;color: #737373;background-color: ;","Internas Demais   :")),
+  column(width=5,align="center",div(style = "height:17px;color: #737373;background-color: ;","Other:")),
   column(width=1,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
  
   column(width=3,align="right",div(style = "height:17px;color: #737373;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_demais_2"))),
   
  br(), 
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","EXTERNAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","EXTERNAL")),
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;background-color: ;",textOutput("Garantia_externa_2"))),
   
       br(), br(),
-  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","VIDA MÉDIA - ATM")),
+  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","ATM")),
   column(width=4,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_ATM"))),
       br(),br(),
-  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","CUSTO MÉDIO")),
+  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","AVERAGE COST")),
   column(width=4,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_custo"))),
       br(),br(),
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","PERCENTUAL VINCENDO")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","MATURITY PROFILE")),
   column(width=2,align="center",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
       
-  column(width=4,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Milhões")),
+  column(width=4,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Million")),
   br(),
   
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","12 meses")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","12 months")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_12_meses_percentual"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_12_meses"))),
          
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","1 a 2 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","1 to 2 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_1_ano_percentual"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_1_ano"))),
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","2 a 3 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","2 to 3 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_2_ano_percentual"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_2_ano"))),
   
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","3 a 4 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","3 to 4 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_3_ano_percentual"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_3_ano"))),
   
   br(),
   
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","4 a 5 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","4 to 5 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_4_ano_percentual"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_4_ano"))),
   
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","Mais 5 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","More 5 yrs")),
   column(width=6,align="right",div(style = "height:17px;;background-color: ;",textOutput("Garantia_5_ano_percentual"))),
          
   column(width=3,align="right",div(style = "height:17px;;background-color: ;",textOutput("Garantia_5_ano")))
@@ -2170,7 +2211,7 @@ observeEvent(Garantia_ATM_reativo(),{
 
                       filter(Inicio == entrada) }
 
-  output$Garantia_ATM <- renderText(paste0(str_replace_all(round(filtro_classificador_estado_atm$ATM_Total,2),"\\.",","), " anos"))
+  output$Garantia_ATM <- renderText(paste0(str_replace_all(round(filtro_classificador_estado_atm$ATM_Total,2),"\\.",","), " years"))
   
 })
   
@@ -2189,7 +2230,7 @@ observeEvent(Garantia_ATM_reativo(),{
 
                       filter(Inicio == entrada) }
 
-  output$Garantia_custo <- renderText(paste0(filtro_classificador_estado_custo$Custo_Total, " a.a"))
+  output$Garantia_custo <- renderText(paste0(filtro_classificador_estado_custo$Custo_Total, " p.a"))
   
 
  })
@@ -2280,7 +2321,7 @@ Column {.tabset}
 -----------------------------------------------------------------------
 
 
-### Operações Garantidas
+### Guaranteed Debt
 
 
 ```{r divida total estados, warning=FALSE, message=FALSE ,fig.width=9, fig.height=7 }
@@ -2304,7 +2345,7 @@ output$divida_total_estados <-renderPlotly(
                  type = 'bar',
                  showlegend =FALSE,
                  marker = list (color = cores_divida_total_estados()), 
-                 text = ~paste0("<b>Estado:</b> ", Inicio,"<br><b>Operações Garantidas:</b> ","R$",funcao_formata_quantidade_2(total_total)," Milhões","<br><b>Parcela Estados:</b> ",funcao_percentual_taxa(total_total/sum(total_total)) ,"<br><b>Parcela Total:</b> ",funcao_percentual_taxa(total_total/sum(agrupador_total_formatado$total_total)),"<br><b>Posição Estados:</b> ",order(total_total, decreasing = TRUE),"° Lugar" ),   
+                 text = ~paste0("<b>States:</b> ", Inicio,"<br><b>Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(total_total)," Milhões","<br><b>Portion States:</b> ",funcao_percentual_taxa(total_total/sum(total_total)) ,"<br><b>Portion Total:</b> ",funcao_percentual_taxa(total_total/sum(agrupador_total_formatado$total_total)),"<br><b>Position States:</b> ",order(total_total, decreasing = TRUE),"° Place" ),   
 
   #"<br><b>Total Estados garantidos:</b> ",nrow(agrupador_formatado_estados)          
   
@@ -2320,7 +2361,7 @@ output$divida_total_estados <-renderPlotly(
               title = "",
              xaxis = list(title="", zeroline = FALSE,showline = FALSE , showgrid = FALSE), #categoryorder = "total ascending", categoryarray = "array"), showticklabels = FALSE
                           
-             yaxis = list(side = 'left' ,title = '<b>Operações Garantidas - R$ Milhões</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,tickformat = ',.2r',
+             yaxis = list(side = 'left' ,title = '<b>Guaranteed Debt - R$ Million</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,tickformat = ',.2r',
                           rangemode = "tozero", range = c(0,max((agrupador_formatado_estados$total_total/1000000)+5000))
                           )) %>%
       
@@ -2332,12 +2373,12 @@ output$divida_total_estados <-renderPlotly(
 
 ```
 
-> **Fonte:**  [Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
-<br>**Nota:** Todos os 26 estados mais o Distrito Federal possuem operações garantidas pela União. 
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
+<br>**Note:** All 26 States plus the Federal District have debt guaranteed by the Federal Government. 
 
 
 
-### Vida Média - ATM
+### ATM
 
 ```{r ATM, warning=FALSE, message=FALSE  }
 
@@ -2361,7 +2402,7 @@ output$ATM <-renderPlotly(
                  type = 'bar',
                  showlegend = FALSE,
                  marker = list (color = cores_atm_estados()),#,line = list(color = '#0571b0', width =2 ) #sizemode = 'diameter'
-                 text = ~paste0("<b>Estado:</b> ", Inicio,"<br><b>Vida Média:</b> ",round(ATM_Total,2)," anos"),
+                 text = ~paste0("<b>States:</b> ", Inicio,"<br><b>ATM:</b> ",round(ATM_Total,2)," years"),
                 hoverinfo = "text"
                  
                  ) %>%
@@ -2371,8 +2412,8 @@ output$ATM <-renderPlotly(
               mode = 'lines',
               line = list(color = '#8c8c8c', width =~1.4),
               showlegend =TRUE,
-              name ="Média",
-      text = ~paste0("<b>Média:</b> ",round(sum((agrupador_ATM_estados_formatado$ATM_Total*agrupador_formatado_estados$total_total))/sum(agrupador_formatado_estados$total_total),2)," anos"),
+              name ="Average",
+      text = ~paste0("<b>Average:</b> ",round(sum((agrupador_ATM_estados_formatado$ATM_Total*agrupador_formatado_estados$total_total))/sum(agrupador_formatado_estados$total_total),2)," years"),
       
       hoverinfo = "text") %>%
      
@@ -2386,7 +2427,7 @@ output$ATM <-renderPlotly(
               title = "",
              xaxis = list(title="", zeroline = TRUE,showline = FALSE ,showlegend = FALSE, showgrid = FALSE), #categoryorder = "total ascending", categoryarray = "array"), showticklabels = FALSE
              
-             yaxis = list(side = 'left',showlegend = FALSE,showgrid = FALSE ,title = '<b>Vida Média - ATM (anos)</b> ', showline = FALSE , zeroline = FALSE,hoverformat = '.2f',
+             yaxis = list(side = 'left',showlegend = FALSE,showgrid = FALSE ,title = '<b>ATM (years)</b> ', showline = FALSE , zeroline = FALSE,hoverformat = '.2f',
                           rangemode = "tozero"
                           )) %>%
       
@@ -2396,9 +2437,9 @@ output$ATM <-renderPlotly(
 )
 ```
 
-> **Fonte:** [Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
 
-### Custo Médio
+### Average Cost
 
 ```{r custos estados, warning=FALSE, message=FALSE  }
 
@@ -2423,8 +2464,8 @@ output$custos_estados <-renderPlotly(
               mode = 'lines',
               line = list(color = '#8c8c8c', width =~1.4),
               showlegend =TRUE,
-              name ="Média",
-      text = ~paste0("<b>Média:</b> ",round(sum((agrupador_custo_estados_formatado$Custo_total_formatado*agrupador_formatado_estados$total_total))/sum(agrupador_formatado_estados$total_total),2),"% a.a" ),
+              name ="Average",
+      text = ~paste0("<b>Average:</b> ",round(sum((agrupador_custo_estados_formatado$Custo_total_formatado*agrupador_formatado_estados$total_total))/sum(agrupador_formatado_estados$total_total),2),"% p.a" ),
       
       hoverinfo = "text") %>%
       
@@ -2432,7 +2473,7 @@ output$custos_estados <-renderPlotly(
                  type = 'bar',
                  showlegend = FALSE,
                  marker = list (color = cores_custo_estados()), #sizemode = 'diameter' #line = list(color = 'rgb(191, 191, 191)'opacity = 0.5
-                 text = ~paste0("<b>Estado:</b> ", Inicio,"<br><b>Custo:</b> ",round(Custo_total_formatado,2),"% a.a"),              
+                 text = ~paste0("<b>States:</b> ", Inicio,"<br><b>Cost:</b> ",round(Custo_total_formatado,2),"% p.a"),              
   
   hoverinfo = "text"
                  
@@ -2453,7 +2494,7 @@ output$custos_estados <-renderPlotly(
                           #rangeslider = list(type = "date")),
              
              
-             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Custo Médio - % a.a</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f',
+             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Average Cost - % p.a</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f',
                           rangemode = "tozero"
                           )) %>%
       
@@ -2463,10 +2504,10 @@ output$custos_estados <-renderPlotly(
 )
 ```
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
 
 
-### Operações Garantidas Cambiais
+### Total FX-Linked
 
 ```{r cambial estados, warning=FALSE, message=FALSE  }
 
@@ -2495,7 +2536,7 @@ output$cambial_estados <-renderPlotly(
                  #colors = c("#ffcccc","#ff6666",'#ff0000'),
                  
                  marker = list (color = cores_cambial_estados()), #sizemode = 'diameter' #line = list(color = 'rgb(191, 191, 191)'
-                 text = ~paste0("<b>Estado:</b> ", Inicio,"<br><b>Peso Cambial:</b> ",round(100*(total_cambial/total_total),2),"%"),              
+                 text = ~paste0("<b>States:</b> ", Inicio,"<br><b>Fx-Linked:</b> ",round(100*(total_cambial/total_total),2),"%"),              
   
   hoverinfo = "text"
                  
@@ -2515,7 +2556,7 @@ output$cambial_estados <-renderPlotly(
                           #rangeslider = list(type = "date")),
              
              
-             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Operações Garantidas Cambiais - Peso (%)</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f',
+             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Fx-Linked - part. Guaranteed Debt (%)</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f',
                           rangemode = "tozero", range = c(0,100)
                           )) %>%
       
@@ -2525,12 +2566,12 @@ output$cambial_estados <-renderPlotly(
 )
 ```
 
-> **Fonte:** [Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
-  <br>**Nota:**Dívida Cambial é a soma entre a dívida interna cambinal mais a dívida externa. O peso da dívida cambinal na carteira é calculado pela divisão entre a parcela cambial e a total.
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
+  <br>**Note:**Total FX-Linked Debt is the sum of Domestic FX-Linked Debt and External Debt. The participation of Total FX-Linked Debt in the portfolio is calculated by dividing the foreign exchange portion by the total debt..
 
 
 
-Municípios
+Municipalities
 =======================================================================
 
 Column
@@ -2612,16 +2653,16 @@ fluidPage(
   
   column(width=6,align="center",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
   
-   column(width=3,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Milhões")),
+   column(width=3,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Million")),
    br(),
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","OPERAÇÕES GARANTIDAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","TOTAL GUARANTEED DEBT")),
   
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_Total_municipios"))),
   
        br(), 
   
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","INTERNAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","DOMESTIC")),
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_municipios"))),
   
@@ -2629,7 +2670,7 @@ fluidPage(
       br(),
  
  
-  column(width=6,align="center",div(style = "height:17px;color: #737373;background-color: ;","Internas Cambiais:")),
+  column(width=6,align="center",div(style = "height:17px;color: #737373;background-color: ;","Fx-Linked:")),
   
   column(width=3,align="right",div(style = "height:17px;color: #737373;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_cambial_municipios"))),
   
@@ -2637,60 +2678,60 @@ fluidPage(
    br(),
   
  
-  column(width=5,align="right",div(style = "height:17px;color: #737373;background-color: ;","Internas Demais   :")),
+  column(width=5,align="center",div(style = "height:17px;color: #737373;background-color: ;","Other:")),
   column(width=1,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
  
   column(width=3,align="right",div(style = "height:17px;color: #737373;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_demais_municipios"))),
   
  br(), 
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","EXTERNAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","EXTERNAL")),
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;background-color: ;",textOutput("Garantia_externa_municipios"))),
   
       br(), br(),
-  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","VIDA MÉDIA - ATM")),
+  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","ATM")),
   column(width=4,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_ATM_municipios"))),
       br(),br(),
-  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","CUSTO MÉDIO")),
+  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","AVERAGE COST")),
   column(width=4,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_custo_municipios"))),
       br(),br(),
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","PERCENTUAL VINCENDO")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","MATURITY PROFILE")),
   column(width=2,align="center",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
       
-  column(width=4,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Milhões")),
+  column(width=4,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Million")),
   br(),
   
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","12 meses")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","12 months")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_12_meses_percentual_municipios"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_12_meses_municipios"))),
          
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","1 a 2 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","1 to 2 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_1_ano_percentual_municipios"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_1_ano_municipios"))),
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","2 a 3 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","2 to 3 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_2_ano_percentual_municipios"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_2_ano_municipios"))),
   
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","3 a 4 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","3 to 4 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_3_ano_percentual_municipios"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_3_ano_municipios"))),
   
   br(),
   
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","4 a 5 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","4 to 5 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_4_ano_percentual_municipios"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_4_ano_municipios"))),
   
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","Mais 5 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","More 5 yrs")),
   column(width=6,align="right",div(style = "height:17px;;background-color: ;",textOutput("Garantia_5_ano_percentual_municipios"))),
          
   column(width=3,align="right",div(style = "height:17px;;background-color: ;",textOutput("Garantia_5_ano_municipios")))
@@ -2770,7 +2811,7 @@ observeEvent(Garantia_ATM_reativo_municipios(),{
 
                       filter(Inicio == entrada) }
 
-  output$Garantia_ATM_municipios <- renderText(paste0(str_replace_all(round(filtro_classificador_estado_atm_municipios$ATM_Total,2),"\\.",","), " anos"))
+  output$Garantia_ATM_municipios <- renderText(paste0(str_replace_all(round(filtro_classificador_estado_atm_municipios$ATM_Total,2),"\\.",","), " years"))
   
 })
   
@@ -2789,7 +2830,7 @@ observeEvent(Garantia_ATM_reativo_municipios(),{
                
                       filter(Inicio == entrada) }
 
-  output$Garantia_custo_municipios <- renderText(paste0(filtro_classificador_custo_municipios$Custo_Total, " a.a"))
+  output$Garantia_custo_municipios <- renderText(paste0(filtro_classificador_custo_municipios$Custo_Total, " p.a"))
   
 
  })
@@ -2844,7 +2885,7 @@ Column {.tabset}
 -----------------------------------------------------------------------
 
 
-### Operações Garantidas
+### Guaranteed Debt
 
 ```{r divida_total_municipios, warning=FALSE, message=FALSE ,fig.width=9, fig.height=7 }
 
@@ -2871,7 +2912,7 @@ output$divida_total_municipios <-renderPlotly(
                  mode = 'markers',
                  marker = list (color = cores_divida_total_municipios(), sizemode = 'diameter', line = list(width = 2,color = cores_divida_total_municipios())), 
                  
-                 text = ~paste0("<b>Município:</b> ", Inicio,"<br><b>Dívida Garantida:</b> ","R$",funcao_formata_quantidade_2(total_total)," Milhões","<br><b>Parcela Municípios:</b> ",funcao_percentual_taxa(total_total/sum(total_total)),"<br><b>Posição Municípios:</b> ",order(total_total, decreasing = TRUE),"° Lugar" ),             
+                 text = ~paste0("<b>Municipality:</b> ", Inicio,"<br><b>Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(total_total)," Million","<br><b>Portion Municipalities:</b> ",funcao_percentual_taxa(total_total/sum(total_total)),"<br><b>Position Municipality:</b> ",order(total_total, decreasing = TRUE),"° Place" ),             
   
                  #"<br><b>Total Municípios garantidos:</b> ",nrow(agrupador_formatado_municipios)
                  
@@ -2888,7 +2929,7 @@ output$divida_total_municipios <-renderPlotly(
              xaxis = list(title="", zeroline = FALSE,showline = FALSE ,showlegend = FALSE, showgrid = FALSE, showticklabels = FALSE), #categoryorder = "total ascending", categoryarray = "array"), showticklabels = FALSE
                           
                       
-             yaxis = list(side = 'left',zeroline = FALSE,showlegend = FALSE ,title = '<b>Operações Garantidas - R$ Milhões</b> ', showline = FALSE ,showgrid = FALSE, zeroline = TRUE,tickformat = ",.2r"
+             yaxis = list(side = 'left',zeroline = FALSE,showlegend = FALSE ,title = '<b>Guaranteed Debt - R$ Million</b> ', showline = FALSE ,showgrid = FALSE, zeroline = TRUE,tickformat = ",.2r"
                            
                           )) %>%
       
@@ -2900,13 +2941,15 @@ output$divida_total_municipios <-renderPlotly(
 
 ```
 
-> **Fonte:** [Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
-<br>**Nota:**  `r nrow(agrupador_formatado_municipios)` municípios possuem operações de crédito garantidas pela União.No entanto, `r nrow(agrupador_formatado_municipios)-max(rank(-agrupador_ATM_municipios_formatado$ATM_Total))` municípios ainda não relizaram nenhum desembolso e, portanto, seu saldo de operações garantidas é zero.
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
+<br>**Note:**  `r nrow(agrupador_formatado_municipios)` 
+municipalities have debt guaranteed by the Federal Government.
+However, `r nrow(agrupador_formatado_municipios)-max(rank(-agrupador_ATM_municipios_formatado$ATM_Total))` municipalities have not yet made any disbursements and, therefore, their balance of guaranteed debt is zero.
 
 
 
 
-### Vida Média - ATM 
+### ATM 
 
 ```{r ATM_municipios, warning=FALSE, message=FALSE  }
 
@@ -2933,18 +2976,18 @@ output$ATM_municipios <-renderPlotly(
                  marker = list (color = cores_atm_municipios(),
                           line = list(color = cores_atm_municipios())),
                  
-                 text = ~paste0("<b>Município:</b> ", Inicio,"<br><b>Vida Média:</b> ",round(ATM_Total,2)," anos"),
+                 text = ~paste0("<b>Municipality:</b> ", Inicio,"<br><b>ATM:</b> ",round(ATM_Total,2)," years"),
                 hoverinfo = "text"
                  
                  ) %>%
                 
-    add_trace(y = ~sum((agrupador_ATM_estados_formatado$ATM_Total*agrupador_formatado_estados$total_total))/sum(agrupador_formatado_estados$total_total) ,
+    add_trace(y = ~sum((agrupador_ATM_municipios_formatado$ATM_Total*agrupador_formatado_municipios$total_total))/sum(agrupador_formatado_municipios$total_total) ,
               type = 'scatter', 
               mode = 'lines',
               line = list(color = '#8c8c8c', width = 1),
               showlegend =TRUE,
-              name ="Média",
-      text = ~paste0("<b>Média:</b> ",round(sum((agrupador_ATM_estados_formatado$ATM_Total*agrupador_formatado_estados$total_total))/sum(agrupador_formatado_estados$total_total),2)," anos"),
+              name ="Average",
+      text = ~paste0("<b>Average:</b> ",round(sum((agrupador_ATM_municipios_formatado$ATM_Total*agrupador_formatado_municipios$total_total))/sum(agrupador_formatado_municipios$total_total),2)," years"),
       
       hoverinfo = "text"
       
@@ -2959,7 +3002,7 @@ output$ATM_municipios <-renderPlotly(
              xaxis = list(title="", zeroline = TRUE,showline = FALSE ,showlegend = FALSE, showgrid = FALSE, showticklabels = FALSE), #categoryorder = "total ascending", categoryarray = "array"), showticklabels = FALSE
                           
              
-             yaxis = list(side = 'left',showlegend = FALSE,showgrid = FALSE ,title = '<b>Vida Média - ATM (anos)</b> ', showline = FALSE , zeroline = FALSE,hoverformat = '.2f'
+             yaxis = list(side = 'left',showlegend = FALSE,showgrid = FALSE ,title = '<b>ATM (anos)</b> ', showline = FALSE , zeroline = FALSE,hoverformat = '.2f'
                           
                           )) %>%
       
@@ -2969,11 +3012,11 @@ output$ATM_municipios <-renderPlotly(
 )
 ```
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
-<br>**Nota:** `r nrow(agrupador_formatado_municipios)-max(rank(-agrupador_ATM_municipios_formatado$ATM_Total))` municípios ainda não relizaram nenhum desembolso e, portanto, suas respectivos vidas médias (ATM) são iguais a zero.
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
+<br>**Note:** `r nrow(agrupador_formatado_municipios)-max(rank(-agrupador_ATM_municipios_formatado$ATM_Total))` municipalities have not yet made any disbursements and, therefore, their respective ATM's are equal to zero.
 
 
-### Custo Médio
+### Average Cost
 
 ```{r custos_municipios, warning=FALSE, message=FALSE  }
 
@@ -2999,7 +3042,7 @@ output$custos_municipios <-renderPlotly(
                  showlegend = FALSE,
                  marker = list (color = cores_custo_municipios(),
                           line = list(color = cores_custo_municipios())),
-                 text = ~paste0("<b>Município:</b> ", Inicio,"<br><b>Custo Médio:</b> ",round(Custo_total_formatado,2),"% a.a"),              
+                 text = ~paste0("<b>Municipality:</b> ", Inicio,"<br><b>Average Cost:</b> ",round(Custo_total_formatado,2),"% p.a"),              
   
   hoverinfo = "text"
                  
@@ -3010,8 +3053,8 @@ output$custos_municipios <-renderPlotly(
               mode = 'lines',
               line = list(color = '#8c8c8c', width = 1),
               showlegend =TRUE,
-              name ="Média",
-      text = ~paste0("<b>Média:</b> ",round(sum((agrupador_custo_municipios_formatado$Custo_total_formatado*agrupador_formatado_municipios$total_total))/sum(agrupador_formatado_municipios$total_total),2),"% a.a" ),
+              name ="Average",
+      text = ~paste0("<b>Average:</b> ",round(sum((agrupador_custo_municipios_formatado$Custo_total_formatado*agrupador_formatado_municipios$total_total))/sum(agrupador_formatado_municipios$total_total),2),"% p.a" ),
       
       hoverinfo = "text"
       
@@ -3025,7 +3068,7 @@ output$custos_municipios <-renderPlotly(
               title = "",
              xaxis = list(title="", zeroline = FALSE,showline = FALSE ,showlegend = FALSE, showgrid = FALSE, showticklabels = FALSE), #categoryorder = "total ascending", categoryarray = "array"), showticklabels = FALSE
                           
-             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Custo Médio - % a.a</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f'
+             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Average Cost - % p.a</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f'
                           
                           )) %>%
       
@@ -3035,11 +3078,11 @@ output$custos_municipios <-renderPlotly(
 )
 ```
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
-<br>**Nota:** `r nrow(agrupador_formatado_municipios)-max(rank(-agrupador_ATM_municipios_formatado$ATM_Total))` municípios ainda não relizaram nenhum desembolso e, portanto, seus respectivos custos são iguais a zero. 
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
+<br>**Note:** `r nrow(agrupador_formatado_municipios)-max(rank(-agrupador_ATM_municipios_formatado$ATM_Total))` municipalities have not yet made any disbursements and, therefore, their respective costs are equal to zero. 
 
 
-### Operações Garantidas Cambiais
+### Total Fx-Linked
 
 ```{r cambial_municipios, warning=FALSE, message=FALSE  }
 
@@ -3068,7 +3111,7 @@ output$cambial_municipios <-renderPlotly(
                  marker = list (color = cores_cambial_municipios(),
                           line = list(color = cores_cambial_municipios())),
                  
-                 text = ~paste0("<b>Municípios:</b> ", Inicio,"<br><b>Peso Cambial:</b> ",round(100*(total_cambial/total_total),2),"%"),              
+                 text = ~paste0("<b>Municipality:</b> ", Inicio,"<br><b>Fx-Linked:</b> ",round(100*(total_cambial/total_total),2),"%"),              
   
   hoverinfo = "text"
                  
@@ -3088,7 +3131,7 @@ output$cambial_municipios <-renderPlotly(
                           #rangeslider = list(type = "date")),
              
              
-             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Operações Garantidas Cambiais - Peso (%)</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f'
+             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Fx-Linked part. Guaranteed Debt (%)</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f'
                           
                           )) %>%
       
@@ -3098,12 +3141,12 @@ output$cambial_municipios <-renderPlotly(
 )
 ```
 
-> **Fonte:** [Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
-  <br>**Nota:** Dívida Cambial é a soma entre a dívida interna cambinal mais a dívida externa. O peso da dívida cambinal na carteira é calculado pela divisão entre a parcela cambial e a total.
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
+  <br>**Note:** Total FX-Linked Debt is the sum of Domestic FX-Linked Debt and External Debt. The participation of Total FX-Linked Debt in the portfolio is calculated by dividing the foreign exchange portion by the total debt.
 
 
 
-Bancos Federais
+Federal Banks
 =======================================================================
 
 Column
@@ -3180,16 +3223,16 @@ fluidPage(
   
   column(width=6,align="center",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
   
-   column(width=3,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Milhões")),
+   column(width=3,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Million")),
    br(),
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","OPERAÇÕES GARANTIDAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","TOTAL GUARANTEED DEBT")),
   
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_Total_bancos_federais"))),
   
        br(), 
   
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","INTERNAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","DOMESTIC")),
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_bancos_federais"))),
   
@@ -3197,7 +3240,7 @@ fluidPage(
       br(),
  
  
-  column(width=6,align="center",div(style = "height:17px;color: #737373;background-color: ;","Internas Cambiais:")),
+  column(width=6,align="center",div(style = "height:17px;color: #737373;background-color: ;","FX-Linked:")),
   
   column(width=3,align="right",div(style = "height:17px;color: #737373;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_cambial_bancos_federais"))),
   
@@ -3205,60 +3248,60 @@ fluidPage(
    br(),
   
  
-  column(width=5,align="right",div(style = "height:17px;color: #737373;background-color: ;","Internas Demais   :")),
+  column(width=5,align="center",div(style = "height:17px;color: #737373;background-color: ;","Other:")),
   column(width=1,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
  
   column(width=3,align="right",div(style = "height:17px;color: #737373;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_demais_bancos_federais"))),
   
  br(), 
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","EXTERNAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","EXTERNAL")),
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;background-color: ;",textOutput("Garantia_externa_bancos_federais"))),
   
       br(), br(),
-  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","VIDA MÉDIA - ATM")),
+  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","ATM")),
   column(width=4,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_ATM_bancos_federais"))),
       br(),br(),
-  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","CUSTO MÉDIO")),
+  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","AVERAGE COST")),
   column(width=4,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_custo_bancos_federais"))),
       br(),br(),
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","PERCENTUAL VINCENDO")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","MATURITY PROFILE")),
   column(width=2,align="center",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
       
-  column(width=4,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Milhões")),
+  column(width=4,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Million")),
   br(),
   
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","12 meses")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","12 months")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_12_meses_percentual_bancos_federais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_12_meses_bancos_federais"))),
          
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","1 a 2 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","1 to 2 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_1_ano_percentual_bancos_federais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_1_ano_bancos_federais"))),
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","2 a 3 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","2 to 3 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_2_ano_percentual_bancos_federais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_2_ano_bancos_federais"))),
   
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","3 a 4 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","3 to 4 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_3_ano_percentual_bancos_federais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_3_ano_bancos_federais"))),
   
   br(),
   
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","4 a 5 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","4 to 5 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_4_ano_percentual_bancos_federais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_4_ano_bancos_federais"))),
   
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","Mais 5 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","More 5 yrs")),
   column(width=6,align="right",div(style = "height:17px;;background-color: ;",textOutput("Garantia_5_ano_percentual_bancos_federais"))),
          
   column(width=3,align="right",div(style = "height:17px;;background-color: ;",textOutput("Garantia_5_ano_bancos_federais")))
@@ -3338,7 +3381,7 @@ observeEvent(Garantia_ATM_reativo_bancos_federais(),{
 
                       filter(Inicio == entrada) }
 
-  output$Garantia_ATM_bancos_federais <- renderText(paste0(str_replace_all(round(filtro_classificador_estado_atm_bancos_federais$ATM_Total,2),"\\.",","), " anos"))
+  output$Garantia_ATM_bancos_federais <- renderText(paste0(str_replace_all(round(filtro_classificador_estado_atm_bancos_federais$ATM_Total,2),"\\.",","), " years"))
   
 })
   
@@ -3357,7 +3400,7 @@ observeEvent(Garantia_ATM_reativo_bancos_federais(),{
                
                       filter(Inicio == entrada) }
 
-  output$Garantia_custo_bancos_federais <- renderText(paste0(filtro_classificador_custo_bancos_federais$Custo_Total, " a.a"))
+  output$Garantia_custo_bancos_federais <- renderText(paste0(filtro_classificador_custo_bancos_federais$Custo_Total, " p.a"))
   
 
  })
@@ -3411,7 +3454,7 @@ observeEvent(Garantia_ATM_reativo_bancos_federais(),{
 Column {.tabset}
 -----------------------------------------------------------------------
 
-### Operações Garantidas
+### Guaranteed Debt
 
 ```{r divida_total_bancos_federais, warning=FALSE, message=FALSE ,fig.width=9, fig.height=7 }
 
@@ -3438,7 +3481,7 @@ output$divida_total_bancos_federais <-renderPlotly(
                  showlegend =FALSE,
                  width =~0.2,
                  marker = list (color = cores_divida_total_bancos_federais()), 
-                 text = ~paste0("<b>Banco Federal:</b> ", Inicio,"<br><b>Operações Garantidas:</b> ","R$",funcao_formata_quantidade_2(total_total)," Milhões","<br><b>Parcela Bancos Federais:</b> ",funcao_percentual_taxa(total_total/sum(total_total)) ,"<br><b>Posição Bancos Federais:</b> ",order(total_total, decreasing = TRUE),"° Lugar" ),   
+                 text = ~paste0("<b>Federal Bank:</b> ", Inicio,"<br><b>Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(total_total)," Milhões","<br><b>Portion Federal Banks:</b> ",funcao_percentual_taxa(total_total/sum(total_total)) ,"<br><b>Position Federal Bank:</b> ",order(total_total, decreasing = TRUE),"° Place" ),   
 
   #"<br><b>Total Estados garantidos:</b> ",nrow(agrupador_formatado_estados)          
   
@@ -3458,7 +3501,7 @@ output$divida_total_bancos_federais <-renderPlotly(
                           
              
              
-             yaxis = list(side = 'left' ,title = '<b>Operações Garantidas - R$ Milhões</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,tickformat = ",.2r",
+             yaxis = list(side = 'left' ,title = '<b>Guaranteed Debt - R$ Million</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,tickformat = ",.2r",
                           rangemode = "tozero"
                           )) %>%
       
@@ -3470,10 +3513,10 @@ output$divida_total_bancos_federais <-renderPlotly(
 
 ```
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
 
 
-### Vida Média - ATM
+### ATM
 
 ```{r ATM_bancos_federais, warning=FALSE, message=FALSE  }
 
@@ -3498,7 +3541,7 @@ output$ATM_bancos_federais <-renderPlotly(
                  showlegend = FALSE,
                  width=~0.2,
                  marker = list (color = cores_atm_bancos_federais()),#,line = list(color = '#0571b0', width =2 ) #sizemode = 'diameter'
-                 text = ~paste0("<b>Banco Federal:</b> ", Inicio,"<br><b>Vida Média:</b> ",round(ATM_Total,2)," anos"),
+                 text = ~paste0("<b>Federal Bank:</b> ", Inicio,"<br><b>ATM:</b> ",round(ATM_Total,2)," anos"),
                 hoverinfo = "text"
                  
                  ) %>%
@@ -3508,8 +3551,8 @@ output$ATM_bancos_federais <-renderPlotly(
               mode = 'lines',
               line = list(color = '#8c8c8c', width = 1),
               showlegend =TRUE,
-              name ="Média",
-      text = ~paste0("<b>Média:</b> ",round(sum((agrupador_ATM_bancos_federais_formatado$ATM_Total*agrupador_formatado_bancos_federais$total_total))/sum(agrupador_formatado_bancos_federais$total_total),2)," anos"),
+              name ="Average",
+      text = ~paste0("<b>Average:</b> ",round(sum((agrupador_ATM_bancos_federais_formatado$ATM_Total*agrupador_formatado_bancos_federais$total_total))/sum(agrupador_formatado_bancos_federais$total_total),2)," years"),
       
       hoverinfo = "text") %>%
      
@@ -3523,7 +3566,7 @@ output$ATM_bancos_federais <-renderPlotly(
               title = "",
              xaxis = list(title="", zeroline = TRUE,showline = FALSE ,showlegend = FALSE, showgrid = FALSE), #categoryorder = "total ascending", categoryarray = "array"), showticklabels = FALSE
              
-             yaxis = list(side = 'left',showlegend = FALSE,showgrid = FALSE ,title = '<b>Vida Média - ATM (anos)</b> ', showline = FALSE , zeroline = FALSE,hoverformat = '.2f',
+             yaxis = list(side = 'left',showlegend = FALSE,showgrid = FALSE ,title = '<b>ATM (years)</b> ', showline = FALSE , zeroline = FALSE,hoverformat = '.2f',
                           rangemode = "tozero"
                           )) %>%
       
@@ -3533,10 +3576,11 @@ output$ATM_bancos_federais <-renderPlotly(
 )
 ```
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
 
 
-### Custo Médio
+### Average Cost
+
 ```{r custos_bancos_federais, warning=FALSE, message=FALSE  }
 
 plotlyOutput("custos_bancos_federais")
@@ -3560,8 +3604,8 @@ output$custos_bancos_federais <-renderPlotly(
               mode = 'lines',
               line = list(color = '#8c8c8c', width = 1),
               showlegend =TRUE,
-              name ="Média",
-      text = ~paste0("<b>Média:</b> ",round(sum((agrupador_custo_bancos_federais_formatado$Custo_total_formatado*agrupador_formatado_bancos_federais$total_total))/sum(agrupador_formatado_bancos_federais$total_total),2),"% a.a" ),
+              name ="Average",
+      text = ~paste0("<b>Average:</b> ",round(sum((agrupador_custo_bancos_federais_formatado$Custo_total_formatado*agrupador_formatado_bancos_federais$total_total))/sum(agrupador_formatado_bancos_federais$total_total),2),"% p.a" ),
       
       hoverinfo = "text") %>%
       
@@ -3570,7 +3614,7 @@ output$custos_bancos_federais <-renderPlotly(
                  showlegend = FALSE,
                  width =~0.2,
                  marker = list (color = cores_custo_bancos_federais()), #sizemode = 'diameter' #line = list(color = 'rgb(191, 191, 191)'opacity = 0.5
-                 text = ~paste0("<b>Banco Federal:</b> ", Inicio,"<br><b>Custo Médio:</b> ",round(Custo_total_formatado,2),"% a.a"),              
+                 text = ~paste0("<b>Federal Bank:</b> ", Inicio,"<br><b>Average Cost:</b> ",round(Custo_total_formatado,2),"% p.a"),              
   
   hoverinfo = "text"
                  
@@ -3591,7 +3635,7 @@ output$custos_bancos_federais <-renderPlotly(
                           #rangeslider = list(type = "date")),
              
              
-             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Custo Médio - % a.a</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f',
+             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Average Cost - % p.a</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f',
                           rangemode = "tozero"
                           )) %>%
       
@@ -3601,11 +3645,11 @@ output$custos_bancos_federais <-renderPlotly(
 )
 ```
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
 
 
 
-### Operações Garantidas Cambiais
+### Total FX-Linked
 
 ```{r cambial_bancos_federais, warning=FALSE, message=FALSE  }
 
@@ -3631,7 +3675,7 @@ output$cambial_bancos_federais <-renderPlotly(
                  type = 'bar',
                  width=~0.2,
                  marker = list (color = cores_cambial_bancos_federais()), #sizemode = 'diameter' #line = list(color = 'rgb(191, 191, 191)'
-                 text = ~paste0("<b>Banco Federal:</b> ", Inicio,"<br><b>Peso Cambial:</b> ",round(100*(total_cambial/total_total),2),"%"),              
+                 text = ~paste0("<b>Federal Bank:</b> ", Inicio,"<br><b>Fx-Linked:</b> ",round(100*(total_cambial/total_total),2),"%"),              
   
   hoverinfo = "text"
                  
@@ -3649,7 +3693,7 @@ output$cambial_bancos_federais <-renderPlotly(
                           #rangeslider = list(type = "date")),
              
              
-             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Operações Garantidas Cambiais - Peso (%)</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f', range =c(0,100)
+             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>FX-Linekd part. Guaranteed Debt (%)</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f', range =c(0,100)
                           
                           )) %>%
       
@@ -3661,10 +3705,10 @@ output$cambial_bancos_federais <-renderPlotly(
 
 
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
-  <br>**Nota:** Dívida Cambial é a soma entre a dívida interna cambinal mais a dívida externa. O peso da dívida cambinal na carteira é calculado pela divisão entre a parcela cambial e a total.
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
+  <br>**Note:** Total FX-Linked Debt is the sum of Domestic FX-Linked Debt and External Debt. The participation of Total FX-Linked Debt in the portfolio is calculated by dividing the foreign exchange portion by the total debt.
 
-Estatais Federais
+Federal SOE
 =======================================================================
 
 Column
@@ -3741,16 +3785,16 @@ fluidPage(
   
   column(width=6,align="center",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
   
-   column(width=3,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Milhões")),
+   column(width=3,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Million")),
    br(),
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","OPERAÇÕES GARANTIDAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","TOTAL GUARANTEED DEBT")),
   
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_Total_estatais_federais"))),
   
        br(), 
   
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","INTERNAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","DOMESTIC")),
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_estatais_federais"))),
   
@@ -3758,7 +3802,7 @@ fluidPage(
       br(),
  
  
-  column(width=6,align="center",div(style = "height:17px;color: #737373;background-color: ;","Internas Cambiais:")),
+  column(width=6,align="center",div(style = "height:17px;color: #737373;background-color: ;","FX-Linekd:")),
   
   column(width=3,align="right",div(style = "height:17px;color: #737373;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_cambial_estatais_federais"))),
   
@@ -3766,60 +3810,60 @@ fluidPage(
    br(),
   
  
-  column(width=5,align="right",div(style = "height:17px;color: #737373;background-color: ;","Internas Demais   :")),
+  column(width=5,align="center",div(style = "height:17px;color: #737373;background-color: ;","Other:")),
   column(width=1,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
  
   column(width=3,align="right",div(style = "height:17px;color: #737373;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_demais_estatais_federais"))),
   
  br(), 
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","EXTERNAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","EXTERNAL")),
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;background-color: ;",textOutput("Garantia_externa_estatais_federais"))),
   
       br(), br(),
-  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","VIDA MÉDIA - ATM")),
+  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","ATM")),
   column(width=4,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_ATM_estatais_federais"))),
       br(),br(),
-  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","CUSTO MÉDIO")),
+  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","AVERAGE COST")),
   column(width=4,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_custo_estatais_federais"))),
       br(),br(),
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","PERCENTUAL VINCENDO")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","MATURITY PROFILE")),
   column(width=2,align="center",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
       
-  column(width=4,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Milhões")),
+  column(width=4,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Million")),
   br(),
   
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","12 meses")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","12 months")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_12_meses_percentual_estatais_federais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_12_meses_estatais_federais"))),
          
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","1 a 2 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","1 to 2 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_1_ano_percentual_estatais_federais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_1_ano_estatais_federais"))),
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","2 a 3 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","2 to 3 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_2_ano_percentual_estatais_federais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_2_ano_estatais_federais"))),
   
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","3 a 4 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","3 to 4 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_3_ano_percentual_estatais_federais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_3_ano_estatais_federais"))),
   
   br(),
   
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","4 a 5 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","4 to 5 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_4_ano_percentual_estatais_federais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_4_ano_estatais_federais"))),
   
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","Mais 5 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","More 5 yrs")),
   column(width=6,align="right",div(style = "height:17px;;background-color: ;",textOutput("Garantia_5_ano_percentual_estatais_federais"))),
          
   column(width=3,align="right",div(style = "height:17px;;background-color: ;",textOutput("Garantia_5_ano_estatais_federais")))
@@ -3898,7 +3942,7 @@ observeEvent(Garantia_ATM_reativo_estatais_federais(),{
 
                       filter(Inicio == entrada) }
 
-  output$Garantia_ATM_estatais_federais <- renderText(paste0(str_replace_all(round(filtro_classificador_estado_atm_estatais_federais$ATM_Total,2),"\\.",","), " anos"))
+  output$Garantia_ATM_estatais_federais <- renderText(paste0(str_replace_all(round(filtro_classificador_estado_atm_estatais_federais$ATM_Total,2),"\\.",","), " years"))
   
 })
   
@@ -3917,7 +3961,7 @@ observeEvent(Garantia_ATM_reativo_estatais_federais(),{
                
                       filter(Inicio == entrada) }
 
-  output$Garantia_custo_estatais_federais <- renderText(paste0(filtro_classificador_custo_estatais_federais$Custo_Total, " a.a"))
+  output$Garantia_custo_estatais_federais <- renderText(paste0(filtro_classificador_custo_estatais_federais$Custo_Total, " p.a"))
   
 
  })
@@ -3970,7 +4014,7 @@ observeEvent(Garantia_ATM_reativo_estatais_federais(),{
 Column {.tabset}
 -----------------------------------------------------------------------
 
-### Operações Garantidas
+### Guaranteed Debt
 
 ```{r divida_total_estatais_federais, warning=FALSE, message=FALSE ,fig.width=9, fig.height=7 }
 
@@ -3997,7 +4041,7 @@ output$divida_total_estatais_federais <-renderPlotly(
                  showlegend =FALSE,
                  width =~0.2,
                  marker = list (color = cores_divida_total_estatais_federais()), 
-                 text = ~paste0("<b>Estatal Federal:</b> ", Inicio,"<br><b>Operações Garantidas:</b> ","R$",funcao_formata_quantidade_2(total_total)," Milhões","<br><b>Parcela Estatais Federais:</b> ",funcao_percentual_taxa(total_total/sum(total_total)) ,"<br><b>Posição Estatais Federais:</b> ",order(total_total, decreasing = TRUE),"° Lugar" ),   
+                 text = ~paste0("<b>Federal SOE:</b> ", Inicio,"<br><b>Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(total_total)," Million","<br><b>Portion Federal SOE:</b> ",funcao_percentual_taxa(total_total/sum(total_total)) ,"<br><b>Position Federal SOE:</b> ",order(total_total, decreasing = TRUE),"° Place" ),   
 
   #"<br><b>Total Estados garantidos:</b> ",nrow(agrupador_formatado_estados)          
   
@@ -4017,7 +4061,7 @@ output$divida_total_estatais_federais <-renderPlotly(
                           
              
              
-             yaxis = list(side = 'left' ,title = '<b>Operações Garantidas - R$ Milhões</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,tickformat = ",.2r",
+             yaxis = list(side = 'left' ,title = '<b>Guaranteed Debt - R$ Million</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,tickformat = ",.2r",
                           rangemode = "tozero"
                           )) %>%
       
@@ -4029,10 +4073,10 @@ output$divida_total_estatais_federais <-renderPlotly(
 
 ```
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
 
 
-### Vida Média - ATM
+### ATM
 ```{r ATM_estatais_federais, warning=FALSE, message=FALSE  }
 
 plotlyOutput("ATM_estatais_federais")
@@ -4056,7 +4100,7 @@ output$ATM_estatais_federais <-renderPlotly(
                  showlegend = FALSE,
                  width=~0.2,
                  marker = list (color = cores_atm_estatais_federais()),#,line = list(color = '#0571b0', width =2 ) #sizemode = 'diameter'
-                 text = ~paste0("<b>Estatal Federal:</b> ", Inicio,"<br><b>Vida Média:</b> ",round(ATM_Total,2)," anos"),
+                 text = ~paste0("<b>Federal SOE:</b> ", Inicio,"<br><b>ATM:</b> ",round(ATM_Total,2)," years"),
                 hoverinfo = "text"
                  
                  ) %>%
@@ -4066,8 +4110,8 @@ output$ATM_estatais_federais <-renderPlotly(
               mode = 'lines',
               line = list(color = '#8c8c8c', width = 1),
               showlegend =TRUE,
-              name ="Média",
-      text = ~paste0("<b>Média:</b> ",round(sum((agrupador_ATM_estatais_federais_formatado$ATM_Total*agrupador_formatado_estatais_federais$total_total))/sum(agrupador_formatado_estatais_federais$total_total),2)," anos"),
+              name ="Average",
+      text = ~paste0("<b>Average:</b> ",round(sum((agrupador_ATM_estatais_federais_formatado$ATM_Total*agrupador_formatado_estatais_federais$total_total))/sum(agrupador_formatado_estatais_federais$total_total),2)," years"),
       
       hoverinfo = "text") %>%
      
@@ -4081,7 +4125,7 @@ output$ATM_estatais_federais <-renderPlotly(
               title = "",
              xaxis = list(title="", zeroline = TRUE,showline = FALSE ,showlegend = FALSE, showgrid = FALSE), #categoryorder = "total ascending", categoryarray = "array"), showticklabels = FALSE
              
-             yaxis = list(side = 'left',showlegend = FALSE,showgrid = FALSE ,title = '<b>Vida Média - ATM (anos)</b> ', showline = FALSE , zeroline = FALSE,hoverformat = '.2f',
+             yaxis = list(side = 'left',showlegend = FALSE,showgrid = FALSE ,title = '<b>ATM (years)</b> ', showline = FALSE , zeroline = FALSE,hoverformat = '.2f',
                           rangemode = "tozero"
                           )) %>%
       
@@ -4091,9 +4135,10 @@ output$ATM_estatais_federais <-renderPlotly(
 )
 ```
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
 
-### Custo Médio
+### Average Cost
+
 ```{r custos_estatais_federais, warning=FALSE, message=FALSE  }
 
 plotlyOutput("custos_estatais_federais")
@@ -4117,8 +4162,8 @@ output$custos_estatais_federais <-renderPlotly(
               mode = 'lines',
               line = list(color = '#8c8c8c', width = 1),
               showlegend =TRUE,
-              name ="Média",
-      text = ~paste0("<b>Média:</b> ",round(sum((agrupador_custo_estatais_federais_formatado$Custo_total_formatado*agrupador_formatado_estatais_federais$total_total))/sum(agrupador_formatado_estatais_federais$total_total),2),"% a.a" ),
+              name ="Average",
+      text = ~paste0("<b>Average:</b> ",round(sum((agrupador_custo_estatais_federais_formatado$Custo_total_formatado*agrupador_formatado_estatais_federais$total_total))/sum(agrupador_formatado_estatais_federais$total_total),2),"% p.a" ),
       
       hoverinfo = "text") %>%
       
@@ -4127,7 +4172,7 @@ output$custos_estatais_federais <-renderPlotly(
                  showlegend = FALSE,
                  width =~0.2,
                  marker = list (color = cores_custo_estatais_federais()), #sizemode = 'diameter' #line = list(color = 'rgb(191, 191, 191)'opacity = 0.5
-                 text = ~paste0("<b>Estatal Federal:</b> ", Inicio,"<br><b>Custo:</b> ",round(Custo_total_formatado,2),"% a.a"),              
+                 text = ~paste0("<b>Federal SOE:</b> ", Inicio,"<br><b>Cost:</b> ",round(Custo_total_formatado,2),"% p.a"),              
   
   hoverinfo = "text"
                  
@@ -4148,7 +4193,7 @@ output$custos_estatais_federais <-renderPlotly(
                           #rangeslider = list(type = "date")),
              
              
-             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Custo Médio - % a.a</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f',
+             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Average Cost - % p.a</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f',
                           rangemode = "tozero"
                           )) %>%
       
@@ -4158,10 +4203,10 @@ output$custos_estatais_federais <-renderPlotly(
 )
 ```
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
 
 
-### Operações Garantidas Cambiais
+### Total FX-Linked
 
 ```{r cambial_estatais_federais, warning=FALSE, message=FALSE  }
 
@@ -4187,7 +4232,7 @@ output$cambial_estatais_federais <-renderPlotly(
                  type = 'bar',
                  width=~0.2,
                  marker = list (color = cores_cambial_estatais_federais()), #sizemode = 'diameter' #line = list(color = 'rgb(191, 191, 191)'
-                 text = ~paste0("<b>Estatal Federal:</b> ", Inicio,"<br><b>Peso Cambial:</b> ",round(100*(total_cambial/total_total),2),"%"),              
+                 text = ~paste0("<b>Federal SOE:</b> ", Inicio,"<br><b>FX-Linked:</b> ",round(100*(total_cambial/total_total),2),"%"),              
   
   hoverinfo = "text"
                  
@@ -4205,7 +4250,7 @@ output$cambial_estatais_federais <-renderPlotly(
                           #rangeslider = list(type = "date")),
              
              
-             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Operações Garantidas Cambiais - Peso (%)</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f', range =c(0,100)
+             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>FX-Linked part. Guaranteed Debt (%)</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f', range =c(0,100)
                           
                           )) %>%
       
@@ -4217,13 +4262,13 @@ output$cambial_estatais_federais <-renderPlotly(
 
 
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
-  <br>**Nota:** Dívida Cambial é a soma entre a dívida interna cambinal mais a dívida externa. O peso da dívida cambinal na carteira é calculado pela divisão entre a parcela cambial e a total.
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
+  <br>**Note:** Total FX-Linked Debt is the sum of Domestic FX-Linked Debt and External Debt. The participation of Total FX-Linked Debt in the portfolio is calculated by dividing the foreign exchange portion by the total debt.
 
 
 
 
-Entidades Controladas
+Controlled Entities
 =======================================================================
 Column
 -----------------------------------------------------------------------
@@ -4299,16 +4344,16 @@ fluidPage(
   
   column(width=6,align="center",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
   
-   column(width=3,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Milhões")),
+   column(width=3,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Million")),
    br(),
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","OPERAÇÕES GARANTIDAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","TOTAL GUARANTEED DEBT")),
   
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_Total_entidades_estaduais"))),
   
        br(), 
   
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","INTERNAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","DOMESTIC")),
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_entidades_estaduais"))),
   
@@ -4316,7 +4361,7 @@ fluidPage(
       br(),
  
  
-  column(width=6,align="center",div(style = "height:17px;color: #737373;background-color: ;","Internas Cambiais:")),
+  column(width=6,align="center",div(style = "height:17px;color: #737373;background-color: ;","FX-Linked:")),
   
   column(width=3,align="right",div(style = "height:17px;color: #737373;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_cambial_entidades_estaduais"))),
   
@@ -4324,60 +4369,60 @@ fluidPage(
    br(),
   
  
-  column(width=5,align="right",div(style = "height:17px;color: #737373;background-color: ;","Internas Demais   :")),
+  column(width=5,align="center",div(style = "height:17px;color: #737373;background-color: ;","Other:")),
   column(width=1,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
  
   column(width=3,align="right",div(style = "height:17px;color: #737373;font-size: 13pt;background-color: ;",textOutput("Garantia_interna_demais_entidades_estaduais"))),
   
  br(), 
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","EXTERNAS")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;background-color: ;","EXTERNAL")),
   
   column(width=3,align="right",div(style = "height:17px;font-size: 13pt;background-color: ;",textOutput("Garantia_externa_entidades_estaduais"))),
   
       br(), br(),
-  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","VIDA MÉDIA - ATM")),
+  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","ATM")),
   column(width=4,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_ATM_entidades_estaduais"))),
       br(),br(),
-  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","CUSTO MÉDIO")),
+  column(width=5,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","AVERAGE COST")),
   column(width=4,align="right",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;",textOutput("Garantia_custo_entidades_estaduais"))),
       br(),br(),
-  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","PERCENTUAL VINCENDO")),
+  column(width=6,align="left",div(style = "height:17px;font-size: 13pt;font-weight: bold;background-color: ;","MATURITY PROFILE")),
   column(width=2,align="center",div(style = "height:17px;font-size: 12pt;background-color: ;","")),
       
-  column(width=4,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Milhões")),
+  column(width=4,align="right",div(style = "height:17px;font-size: 12pt;background-color: ;","R$ Million")),
   br(),
   
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","12 meses")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","12 months")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_12_meses_percentual_entidades_estaduais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_12_meses_entidades_estaduais"))),
          
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","1 a 2 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","1 to 2 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_1_ano_percentual_entidades_estaduais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_1_ano_entidades_estaduais"))),
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","2 a 3 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","2 to 3 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_2_ano_percentual_entidades_estaduais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_2_ano_entidades_estaduais"))),
   
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","3 a 4 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","3 to 4 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_3_ano_percentual_entidades_estaduais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_3_ano_entidades_estaduais"))),
   
   br(),
   
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","4 a 5 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","4 to 5 yrs")),
   column(width=6,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_4_ano_percentual_entidades_estaduais"))),
          
   column(width=3,align="right",div(style = "height:17px;background-color: ;",textOutput("Garantia_4_ano_entidades_estaduais"))),
   
   br(),
-  column(width=3,align="left",div(style = "height:17px;background-color: ;","Mais 5 anos")),
+  column(width=3,align="left",div(style = "height:17px;background-color: ;","More 5 yrs")),
   column(width=6,align="right",div(style = "height:17px;;background-color: ;",textOutput("Garantia_5_ano_percentual_entidades_estaduais"))),
          
   column(width=3,align="right",div(style = "height:17px;;background-color: ;",textOutput("Garantia_5_ano_entidades_estaduais")))
@@ -4457,7 +4502,7 @@ observeEvent(Garantia_ATM_reativo_entidades_estaduais(),{
 
                       filter(Inicio == entrada) }
 
-  output$Garantia_ATM_entidades_estaduais <- renderText(paste0(str_replace_all(round(filtro_classificador_estado_atm_entidades_estaduais$ATM_Total,2),"\\.",","), " anos"))
+  output$Garantia_ATM_entidades_estaduais <- renderText(paste0(str_replace_all(round(filtro_classificador_estado_atm_entidades_estaduais$ATM_Total,2),"\\.",","), " years"))
   
 })
   
@@ -4476,7 +4521,7 @@ observeEvent(Garantia_ATM_reativo_entidades_estaduais(),{
                
                       filter(Inicio == entrada) }
 
-  output$Garantia_custo_entidades_estaduais <- renderText(paste0(filtro_classificador_custo_entidades_estaduais$Custo_Total, " a.a"))
+  output$Garantia_custo_entidades_estaduais <- renderText(paste0(filtro_classificador_custo_entidades_estaduais$Custo_Total, " p.a"))
   
 
  })
@@ -4531,7 +4576,7 @@ observeEvent(Garantia_ATM_reativo_entidades_estaduais(),{
 Column {.tabset}
 -----------------------------------------------------------------------
 
-### Operações Garantidas
+### Guaranteed Debt
 
 ```{r divida_total_entidades_estaduais, warning=FALSE, message=FALSE ,fig.width=9, fig.height=7 }
 
@@ -4558,7 +4603,7 @@ output$divida_total_entidades_estaduais <-renderPlotly(
                  showlegend =FALSE,
                  width =~0.4,
                  marker = list (color = cores_divida_total_entidades_estaduais()), 
-                 text = ~paste0("<b>Entidade Estadual:</b> ", Inicio,"<br><b>Operações Garantidas:</b> ","R$",funcao_formata_quantidade_2(total_total)," Milhões","<br><b>Parcela Entidades Estaduais:</b> ",funcao_percentual_taxa(total_total/sum(total_total)) ,"<br><b>Posição Entidades Estaduais:</b> ",order(total_total, decreasing = TRUE),"° Lugar" ),   
+                 text = ~paste0("<b>Controlled Entities:</b> ", Inicio,"<br><b>Guaranteed Debt:</b> ","R$",funcao_formata_quantidade_2(total_total)," Million","<br><b>Portion Controlled Entities:</b> ",funcao_percentual_taxa(total_total/sum(total_total)) ,"<br><b>Position Controlled Entities:</b> ",order(total_total, decreasing = TRUE),"° Place" ),   
 
   #"<br><b>Total Estados garantidos:</b> ",nrow(agrupador_formatado_estados)          
   
@@ -4578,7 +4623,7 @@ output$divida_total_entidades_estaduais <-renderPlotly(
                           
              
              
-             yaxis = list(side = 'left' ,title = '<b>Operações Garantidas - R$ Milhões</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,tickformat = ",.2r",
+             yaxis = list(side = 'left' ,title = '<b>Guaranteed Debt - R$ Million</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,tickformat = ",.2r",
                           rangemode = "tozero"
                           )) %>%
       
@@ -4590,10 +4635,10 @@ output$divida_total_entidades_estaduais <-renderPlotly(
 
 ```
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
 
 
-### Vida Média - ATM
+### ATM
 
 ```{r ATM_entidades_estaduais, warning=FALSE, message=FALSE  }
 
@@ -4618,7 +4663,7 @@ output$ATM_entidades_estaduais <-renderPlotly(
                  showlegend = FALSE,
                  width=~0.4,
                  marker = list (color = cores_atm_entidades_estaduais()),#,line = list(color = '#0571b0', width =2 ) #sizemode = 'diameter'
-                 text = ~paste0("<b>Entidade Estadual:</b> ", Inicio,"<br><b>Vida Média:</b> ",round(ATM_Total,2)," anos"),
+                 text = ~paste0("<b>Controlled Entities:</b> ", Inicio,"<br><b>ATM:</b> ",round(ATM_Total,2)," years"),
                 hoverinfo = "text"
                  
                  ) %>%
@@ -4628,8 +4673,8 @@ output$ATM_entidades_estaduais <-renderPlotly(
               mode = 'lines',
               line = list(color = '#8c8c8c', width = 1),
               showlegend =TRUE,
-              name ="Média",
-      text = ~paste0("<b>Média:</b> ",round(sum((agrupador_ATM_entidades_estaduais_formatado$ATM_Total*agrupador_formatado_entidades_estaduais$total_total))/sum(agrupador_formatado_entidades_estaduais$total_total),2)," anos"),
+              name ="Average",
+      text = ~paste0("<b>Average:</b> ",round(sum((agrupador_ATM_entidades_estaduais_formatado$ATM_Total*agrupador_formatado_entidades_estaduais$total_total))/sum(agrupador_formatado_entidades_estaduais$total_total),2)," years"),
       
       hoverinfo = "text") %>%
      
@@ -4643,7 +4688,7 @@ output$ATM_entidades_estaduais <-renderPlotly(
               title = "",
              xaxis = list(title="", zeroline = TRUE,showline = FALSE ,showlegend = FALSE, showgrid = FALSE, tickangle = 45), #categoryorder = "total ascending", categoryarray = "array"), showticklabels = FALSE
              
-             yaxis = list(side = 'left',showlegend = FALSE,showgrid = FALSE ,title = '<b>Vida Média - ATM (anos)</b> ', showline = FALSE , zeroline = FALSE,hoverformat = '.2f',
+             yaxis = list(side = 'left',showlegend = FALSE,showgrid = FALSE ,title = '<b>ATM (years)</b> ', showline = FALSE , zeroline = FALSE,hoverformat = '.2f',
                           rangemode = "tozero"
                           )) %>%
       
@@ -4653,9 +4698,10 @@ output$ATM_entidades_estaduais <-renderPlotly(
 )
 ```
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
 
-### Custo Médio
+### Average Cost
+
 ```{r custos_entidades_estaduais, warning=FALSE, message=FALSE  }
 
 plotlyOutput("custos_entidades_estaduais")
@@ -4679,8 +4725,8 @@ output$custos_entidades_estaduais <-renderPlotly(
               mode = 'lines',
               line = list(color = '#8c8c8c', width = 1),
               showlegend =TRUE,
-              name ="Média",
-      text = ~paste0("<b>Média:</b> ",round(sum((agrupador_custo_entidades_estaduais_formatado$Custo_total_formatado*agrupador_formatado_entidades_estaduais$total_total))/sum(agrupador_formatado_entidades_estaduais$total_total),2),"% a.a" ),
+              name ="Average",
+      text = ~paste0("<b>Average:</b> ",round(sum((agrupador_custo_entidades_estaduais_formatado$Custo_total_formatado*agrupador_formatado_entidades_estaduais$total_total))/sum(agrupador_formatado_entidades_estaduais$total_total),2),"% p.a" ),
       
       hoverinfo = "text") %>%
       
@@ -4689,7 +4735,7 @@ output$custos_entidades_estaduais <-renderPlotly(
                  showlegend = FALSE,
                  width =~0.4,
                  marker = list (color = cores_custo_entidades_estaduais()), #sizemode = 'diameter' #line = list(color = 'rgb(191, 191, 191)'opacity = 0.5
-                 text = ~paste0("<b>Entidade Estadual:</b> ", Inicio,"<br><b>Custo Médio:</b> ",round(Custo_total_formatado,2),"% a.a"),              
+                 text = ~paste0("<b>Controlled Entities:</b> ", Inicio,"<br><b>Average Cost:</b> ",round(Custo_total_formatado,2),"% p.a"),              
   
   hoverinfo = "text"
                  
@@ -4710,7 +4756,7 @@ output$custos_entidades_estaduais <-renderPlotly(
                           #rangeslider = list(type = "date")),
              
              
-             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Custo Médio - % a.a</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f',
+             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Average Cost - % p.a</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f',
                           rangemode = "tozero"
                           )) %>%
       
@@ -4720,10 +4766,10 @@ output$custos_entidades_estaduais <-renderPlotly(
 )
 ```
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
 
 
-### Operações Garantidas Cambiais
+### Total FX-Linked
 
 ```{r cambial_entidades_estaduais, warning=FALSE, message=FALSE  }
 
@@ -4749,7 +4795,7 @@ output$cambial_entidades_estaduais <-renderPlotly(
                  type = 'bar',
                  width=~0.4,
                  marker = list (color = cores_cambial_entidades_estaduais()), #sizemode = 'diameter' #line = list(color = 'rgb(191, 191, 191)'
-                 text = ~paste0("<b>Entidade Estadual:</b> ", Inicio,"<br><b>Peso Cambial:</b> ",round(100*(total_cambial/total_total),2),"%"),              
+                 text = ~paste0("<b>Controlled Entities:</b> ", Inicio,"<br><b>FX-Linked:</b> ",round(100*(total_cambial/total_total),2),"%"),              
   
   hoverinfo = "text"
                  
@@ -4767,7 +4813,7 @@ output$cambial_entidades_estaduais <-renderPlotly(
                           #rangeslider = list(type = "date")),
              
              
-             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>Operações Garantidas Cambiais - Peso (%)</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f', range =c(0,100)
+             yaxis = list(side = 'left',showlegend = FALSE ,title = '<b>FX-Linekd part. Guaranteed Debt (%)</b> ', showline = FALSE ,showgrid = FALSE, zeroline = FALSE,hoverformat = '.2f', range =c(0,100)
                           
                           )) %>%
       
@@ -4779,12 +4825,12 @@ output$cambial_entidades_estaduais <-renderPlotly(
 
 
 
-> **Fonte:**[Secretaria do Tesouro Nacional](http://www.tesouro.fazenda.gov.br/-/relatorios-garantias-e-contratacoes-diretas)
-  <br>**Nota:** Dívida Cambial é a soma entre a dívida interna cambinal mais a dívida externa. O peso da dívida cambinal na carteira é calculado pela divisão entre a parcela cambial e a total.
+> **Source:**  [Brazilian National Treasury Secretary](https://www.gov.br/tesouronacional/en/federal-public-debt)
+  <br>**Note:** Total FX-Linked Debt is the sum of Domestic FX-Linked Debt and External Debt. The participation of Total FX-Linked Debt in the portfolio is calculated by dividing the foreign exchange portion by the total debt.
 
 
 
-Contratos Assinados
+Signed Contracts
 =======================================================================
 
 ```{r contratos_assinados, warning=FALSE, message=FALSE  }
@@ -4803,16 +4849,16 @@ novos_contratos_2010$Assinatura <- format(as.Date(novos_contratos_2010$Assinatur
 fluidPage(
 fluidRow(
   column(2, selectInput("Ano",
-                  label="Ano",width = '20px',
-                  choices = unique(c("Todos",sort(novos_contratos_2010$Ano, decreasing = TRUE))),
+                  label="Year",width = '20px',
+                  choices = unique(c("All",sort(novos_contratos_2010$Ano, decreasing = TRUE))),
                   selected = max(novos_contratos$Ano)
             )),
 
 column(2,
 selectInput("Grupo", 
-                     label="Grupo ",
-                 choices = unique(c("Todos",sort(novos_contratos_2010$Tipo_Mutuario, decreasing = TRUE))),
-                 selected = "Todos"
+                     label="Type of Entity",
+                 choices = unique(c("All",sort(novos_contratos_2010$Tipo_Mutuario, decreasing = TRUE))),
+                 selected = "All"
 )),
 
 
@@ -4820,9 +4866,9 @@ selectInput("Grupo",
 
 column(2,
 selectInput("Entidade", 
-                     label="Mutuario",
+                     label="Debtor",
               
-              choices = unique(c("Todos",sort(novos_contratos_2010$Mutuario, decreasing = TRUE))),
+              choices = unique(c("All",sort(novos_contratos_2010$Mutuario, decreasing = TRUE))),
                      selected = "a"
             
                   
@@ -4832,16 +4878,16 @@ selectInput("Entidade",
 column(2,
 selectInput("Status", 
                      label="Status",
-                     choices = unique(c("Todos",sort(novos_contratos_2010$Status, decreasing = TRUE))),
-                     selected = "Todos"
+                     choices = unique(c("All",sort(novos_contratos_2010$Status, decreasing = TRUE))),
+                     selected = "All"
             )),
 
 
 
 column(2,
-selectInput("Tipo",label="Tipo",
-                     choices = unique(c("Todos",sort(novos_contratos_2010$Tipo))),
-                selected = "Todos"))
+selectInput("Tipo",label="Type of Debt",
+                     choices = unique(c("All",sort(novos_contratos_2010$Tipo))),
+                selected = "All"))
 
 ))
 
@@ -4868,12 +4914,12 @@ observeEvent(Contratos_assinados_reativo(),{
    {entrada_ano <- input$Ano}
  
    
-   if(entrada_ano != "Todos"){
+   if(entrada_ano != "All"){
 
               filtro_ano_contratos_assinados <- novos_contratos_2010 %>%
                filter(Ano == entrada_ano)}
   
-   if(entrada_ano == "Todos"){
+   if(entrada_ano == "All"){
 
               filtro_ano_contratos_assinados <- novos_contratos_2010 
                 }
@@ -4885,14 +4931,14 @@ observeEvent(Contratos_assinados_reativo(),{
     {entrada_grupo <- input$Grupo}
    
     
-    if(entrada_grupo != "Todos"){
+    if(entrada_grupo != "All"){
       
                filtro_grupo_contratos_assinados <- filtro_ano_contratos_assinados %>%
                 filter(Tipo_Mutuario == entrada_grupo) 
                
     }
   
-  if(entrada_grupo == "Todos"){
+  if(entrada_grupo == "All"){
    
                filtro_grupo_contratos_assinados <- filtro_ano_contratos_assinados 
   }
@@ -4904,7 +4950,7 @@ observeEvent(Contratos_assinados_reativo(),{
     {entrada_entidade <- input$Entidade}
    
     
-    if(entrada_entidade != "Todos"){
+    if(entrada_entidade != "All"){
       
                 filtro_entidade_contratos_assinados <- filtro_grupo_contratos_assinados %>%
                 filter(
@@ -4912,7 +4958,7 @@ observeEvent(Contratos_assinados_reativo(),{
     }
   
    
-    if(entrada_entidade == "Todos"){
+    if(entrada_entidade == "All"){
                  
                 filtro_entidade_contratos_assinados <- filtro_grupo_contratos_assinados 
                 
@@ -4927,13 +4973,13 @@ observeEvent(Contratos_assinados_reativo(),{
     {entrada_status <- input$Status}
    
    
-    if(entrada_status != "Todos"){
+    if(entrada_status != "All"){
    
                filtro_status_contratos_assinados <- filtro_entidade_contratos_assinados %>%
                 filter(Status == entrada_status) 
                  }
   
-  if(entrada_status == "Todos"){
+  if(entrada_status == "All"){
    
                filtro_status_contratos_assinados <- filtro_entidade_contratos_assinados 
                 
@@ -4946,12 +4992,13 @@ observeEvent(Contratos_assinados_reativo(),{
     {entrada_tipo <- input$Tipo}
    
     
-    if(entrada_tipo != "Todos"){
+    if(entrada_tipo != "All"){
    
                filtro_tipo_contratos_assinados <- filtro_status_contratos_assinados %>%
-                filter(Tipo == entrada_tipo) 
+                filter(Tipo == entrada_tipo) %>%
+                 mutate(`Valor Contratado Original`= formatC(`Valor Contratado Original`*1000000, format = "f", big.mark = ".",decimal.mark = ",",digits =2))
                  }
-    if(entrada_tipo == "Todos"){
+    if(entrada_tipo == "All"){
    
                filtro_tipo_contratos_assinados <- filtro_status_contratos_assinados %>%
                     mutate(`Valor Contratado Original`= formatC(`Valor Contratado Original`*1000000, format = "f", big.mark = ".",decimal.mark = ",",digits =2))
@@ -4959,7 +5006,7 @@ observeEvent(Contratos_assinados_reativo(),{
   
 output$Contratos <- renderDT({
 
-  datatable(filtro_tipo_contratos_assinados[,c(28,1,27,30,26,29,9,10,22,23)], 
+  datatable(filtro_tipo_contratos_assinados[,c(28,1,17,30,3,5,29,9,10,22,23)], 
           rownames = FALSE,
           extensions = c('Buttons', 'Scroller'),
           options = list(deferRender = TRUE,
@@ -4977,7 +5024,7 @@ output$Contratos <- renderDT({
           paging = TRUE,
           searching = FALSE
           ),
-     colnames = c('ANO','CONTRATO' ,'DATA ASSINATURA', 'GRUPO', 'MUTUARIO', 'STATUS', 'TIPO', 'CREDOR', 'MOEDA', 'VALOR CONTRATADO')
+     colnames = c('YEAR','CONTRACT' ,'SIGNING DATE', 'TYPE OF ENTITY', 'DEBTOR','FU' ,'STATUS', 'TYPE OF DEBT', 'CREDITOR', 'CURRENCY', 'CONTRACTED AMOUNT')
     
 
     ) #%>%
@@ -4995,7 +5042,7 @@ observe({
   
   
       updateSelectInput(session, "Entidade",
-                        choices = unique(c("Todos",filtro_grupo_contratos_assinados$Mutuario)),
+                        choices = unique(c("All",filtro_grupo_contratos_assinados$Mutuario)),
                         selected = paste("a")
                        
                         
