@@ -35,8 +35,18 @@ const ncol_rank = w < 510 ? 2 : 5;
 // as criteria for spreading out the bubbles
 const lista_tipos = ["Estados", "Bancos Federais", "Municipios", "Entidades Controladas", "Estatais Federais"];
 
+const translate_to_en = {
+
+  "Estados" : "States",
+  "Bancos Federais" : "Federal Banks", 
+  "Municipios" : "Municipalities", 
+  "Entidades Controladas" : "Controlled Entities", 
+  "Estatais Federais" : "Federal SOE"
+
+};
+
 const lista_rank = d3.range(qde_rank-1).map(d => d+1);
-lista_rank.push("Demais");
+lista_rank.push("Other");
 
 // a function that returns an object with the coordinates and parameters
 // of the bubbles "clusters"
@@ -59,7 +69,7 @@ const generate_groups_coordinates = function(list, ncol) {
     const pad = (elementos_sobrando > 0) & (coord_j + 1 == nrow) ? ajuste : 0;
 
     return (obj[d] = {
-            x_cell: d == "Demais" ? w/2 : w/(ncol*2) + (w*coord_i)/ncol + pad,
+            x_cell: d == "Other" ? w/2 : w/(ncol*2) + (w*coord_i)/ncol + pad,
             y_cell: h/(nrow*2) + (h*coord_j)/nrow,
             line_number: coord_j
             })
@@ -108,7 +118,7 @@ d3.csv("webpage/dados/dados_vis_garantias.csv", function(d) {
         entidade: d.Inicio,
         valor: +d.valor,
         valor_classificador: +d.total_classificador,
-        rank_geral: +d.rank_geral < qde_rank ? +d.rank_geral : "Demais",
+        rank_geral: +d.rank_geral < qde_rank ? +d.rank_geral : "Other",
         rank_classificador: +d.rank_classificadores,
         x: Math.random() * w,
         y: Math.random() * h
@@ -136,13 +146,13 @@ d3.csv("webpage/dados/dados_vis_garantias.csv", function(d) {
     // cria objetos para posicionar os rótulos
     // e funções para gerar os rótulos
 
-    // total demais
-    let demais = 0;
+    // total Other
+    let Other = 0;
     dados.forEach(function(d) {
-      if (d.rank_geral == "Demais")
-        demais += d.valor;
+      if (d.rank_geral == "Other")
+        Other += d.valor;
     });
-    //console.log(demais);
+    //console.log(Other);
 
     /*
     // function to evaluate subtotals
@@ -232,11 +242,11 @@ d3.csv("webpage/dados/dados_vis_garantias.csv", function(d) {
     const labels_ranks_com_valores = [];
     lista_rank.forEach(
       (d, i) => labels_ranks_com_valores[i] = {
-        rank: d == "Demais" ? d : d + ". " + dados[i].entidade, // (1)
-        tipo: d == "Demais" ? "" : dados[i].classificador,
-        value: d == "Demais" ? demais : dados[i].valor, // (1)
+        rank: d == "Other" ? d : d + ". " + dados[i].entidade, // (1)
+        tipo: d == "Other" ? "" : dados[i].classificador,
+        value: d == "Other" ? Other : dados[i].valor, // (1)
         x_label : ranks[d].x_cell - ranks.w_cell/2,
-        y_label : d == "Demais" ? ranks[d].y_cell + ranks.h_cell/2 : ranks[d].y_cell + ranks.h_cell/2 - 30,
+        y_label : d == "Other" ? ranks[d].y_cell + ranks.h_cell/2 : ranks[d].y_cell + ranks.h_cell/2 - 30,
         w_label : ranks.w_cell
       }
     );
@@ -269,14 +279,14 @@ d3.csv("webpage/dados/dados_vis_garantias.csv", function(d) {
       labels_geral
         .append("p")
         .append("strong")
-        .text("Saldo Devedor das Garantias")
+        .text("OUTSTANDING")
         .style("font-size", "1.5em")
         .style("color", "#1C5B80");
 
       labels_geral
         .append("p")
         .append("strong")
-        .text("concedidas pela União")
+        .text("GUARANTEED DEBT")
         .style("font-size", "1.5em")
         .style("color", "#1C5B80");
 
@@ -303,7 +313,7 @@ d3.csv("webpage/dados/dados_vis_garantias.csv", function(d) {
       labels_tipos
         .append("p")
         .append("strong")
-        .text(d => d.classificador)
+        .text(d => translate_to_en[d.classificador])
         .style("color", d => fillColor(d.classificador));
 
       labels_tipos
@@ -334,14 +344,14 @@ d3.csv("webpage/dados/dados_vis_garantias.csv", function(d) {
 
       labels_ranks
         .append("p")
-        .text(d => d.tipo)
+        .text(d => translate_to_en[d.tipo])
         .classed("tipo", true)            
         .style("color", d => fillColor(d.tipo));
 
       labels_ranks
         .append("p")
         .classed("valor", true)
-        .text(d => d == "Demais" ? "" : formata_vlr_tooltip(d.value));             
+        .text(d => d == "Other" ? "" : formata_vlr_tooltip(d.value));             
     }
 
 
@@ -493,7 +503,7 @@ d3.csv("webpage/dados/dados_vis_garantias.csv", function(d) {
           // move the bubbles
 
           // @v4 Reset the 'x' force to draw the bubbles to their year centers
-          simulation.force('x', d3.forceX().strength(d => d.rank_geral == "Demais" ? 0.0125 : forceStrength).x(d => ranks[d.rank_geral].x_cell));
+          simulation.force('x', d3.forceX().strength(d => d.rank_geral == "Other" ? 0.0125 : forceStrength).x(d => ranks[d.rank_geral].x_cell));
           simulation.force('y', d3.forceY().strength(forceStrength).y(d => ranks[d.rank_geral].y_cell));
       
           // @v4 We can reset the alpha value and restart the simulation
@@ -501,8 +511,8 @@ d3.csv("webpage/dados/dados_vis_garantias.csv", function(d) {
           /*     
 
           bubbles.transition().duration(1000)
-            .attr("cx", d => d.rank_geral == "Demais" ? d.x*ranks.w_cell/w + ranks[d.rank_geral].x_cell - ranks.w_cell/2 : ranks[d.rank_geral].x_cell)
-            .attr("cy", d => d.rank_geral == "Demais" ? d.y*ranks.h_cell/h + ranks[d.rank_geral].y_cell - ranks.h_cell/2 : ranks[d.rank_geral].y_cell);
+            .attr("cx", d => d.rank_geral == "Other" ? d.x*ranks.w_cell/w + ranks[d.rank_geral].x_cell - ranks.w_cell/2 : ranks[d.rank_geral].x_cell)
+            .attr("cy", d => d.rank_geral == "Other" ? d.y*ranks.h_cell/h + ranks[d.rank_geral].y_cell - ranks.h_cell/2 : ranks[d.rank_geral].y_cell);
             */
 
           break;

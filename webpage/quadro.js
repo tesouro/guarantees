@@ -25,12 +25,12 @@ const formata_vlr_tooltip = function(val){
 const periodos_maturacao = {};
     
 periodos_maturacao["rotulos"] = [
-  "Até 12 meses",
-  "De 1 a 2 anos",
-  "De 2 a 3 anos",
-  "De 3 a 4 anos",
-  "De 4 a 5 anos",
-  "Acima de 5 anos"
+  "Up to 12 months", 
+  "1 to 2 years", 
+  "2 to 3 years", 
+  "3 to 4 years", 
+  "4 to 5 years", 
+  "More than 5 years"
 ];
 
 periodos_maturacao["valores"] = [
@@ -50,6 +50,16 @@ periodos_maturacao["percentual"] = [
   "De_4_5_anos_percentual", 
   "Acima_5_anos_percentual"
 ];
+
+// const translate_to_en = {
+
+//   "Estados" : "States",
+//   "Bancos Federais" : "Federal Banks", 
+//   "Municipios" : "Municipalities", 
+//   "Entidades Controladas" : "Controlled Entities", 
+//   "Estatais Federais" : "Federal SOE"
+
+// };
 
 // definicoes do svg
 
@@ -165,7 +175,7 @@ function draw_grafico_card(dados_selecionados) {
     .style('border-color', cor_grupo);
 
   d3.select('section.quadro span.titulo-card')
-    .text(dados_selecionados.Inicio + ' (' + dados_selecionados.Classificador + ')');
+    .text(dados_selecionados.Inicio + ' (' + translate_to_en[dados_selecionados.Classificador] + ')');
 
   //console.log("Mini dataset", mini_dataset);
 
@@ -314,7 +324,7 @@ Promise.all([
       .append("option")
       .classed("populados", true)
       .property("value", d => d)
-      .text(d => d);
+      .text(d => translate_to_en[d]);
 
     const $menu_entidade_options = $menu_entidade
       .selectAll("option.populados")
