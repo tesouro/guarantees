@@ -33,30 +33,30 @@
 
 <main>
     <header class="abertura limited-width">
-        <h1>As Garantias Concedidas pela União</h1>        
-        <p>Esta é a primeira parte de uma série de 3 textos sobre as Garantias Concedidas pela União. </br>Veja a <a href="./honras">Parte 2</a>. Veja a <a href="./dividas">Parte 3</a>.</p>
+        <h1>Brazilian Guaranteed Debt</h1>        
+        <p>This is the first installment of a multi-part series about the Brazilian Garanteed Debt. </br>See <a href="./honras">Parte 2</a>. Veja a <a href="./dividas">Parte 3</a>.</p>
     </header>
 
     <section class="prose limited-width">
 
         <div class="container-grupo-com-quadro">
 
-        <p>Desconforto. Falar sobre dívidas quase sempre causa um certo desconforto. E não apenas por nos deixar expostos, mas porque dívida gera preocupação, angústia, além de reduzir a nossa liberdade em gastar o nosso dinheiro da forma que queremos. E o desconforto pode aumentar ainda mais quando sabemos da possibilidade de pagar por outras dívidas além das nossas, reduzindo ainda mais essa tal liberdade.</p>
+        <p><strong>AN UNCOMFORTABLE TOPIC</strong>. Debt is an awkward topic for many people in Brazil. Some feel uneasy as their finances may become exposed, creating anxiety and adding constraints on their ability to spend money at their own will.  This somehow painful situation could get worse if one realizes it may be called in to assume other’s people debt, further constraining its own finances.</p>
 
-        <p>Poderíamos estar falando <strong>DE</strong> você, mas preferimos falar <strong>PARA</strong> você sobre a possibilidade de a União pagar por <span class="termo-destaque-lateral">dívidas</span> de outras entidades públicas. E isso pode parecer distante para a maioria de nós, que pensamos no ente União como algo abstrato, longe do nosso dia-a-dia. No entanto, quando constatamos a redução do investimento público e das políticas sociais, bem como o parcelamento de salário de servidores e até a suspensão de pagamento de fornecedores, temos indícios de que o desconforto, antes exclusivo da União, chegou à rotina das pessoas. Quer entender como essa sequência de desconforto pode chegar até você?
+        <p>We could’ve been talking <strong>ABOUT</strong> you, we’re talking <strong>TO</strong> about the possibility of the Federal Government to serve the <span class="termo-destaque-lateral">debt</span> of other public entities. This may look like something too distant from your daily life, if you understand the Federal Government as an abstract entity. However, when you realize there has been a reduction on public investments and on social security policies, when public servants payroll is fractioned and when contracts with suppliers are suspended, we’ve got hints that the negative effects of debt have reached the ordinary citizen.  Would you like to understand how is this affecting you?
         </p>
 
             <aside class="conteudo-destaque-lateral left bottom">
-            <h4>Dívidas</h4>
-            <p>Dívidas nada mais são do que compromissos (financeiros) nos quais um agente, ao receber recurso de um outro agente (terceiro), se compromete a devolver tal quantia acrescida de um determinado valor (ou seja, os juros e encargos). Chama-se assim de Mutuário aqueles que captam algum tipo de dívida e de Credor aquele que empresta. Isso acontece a toda hora entre indivíduos/empresas em uma sociedade. Pois bem, a mesma situação pode ocorrer entre um Município e um credor privado / público (banco, organismo multilateral etc.).
+            <h4>Debt</h4>
+            <p>Debt is a financial obligation where one agent (debtor) receives cash from another party (creditor). The debtor agrees to repay the creditor in the future, added by an agreed sum (interest) to compensate the creditor for the loan. This ordinary type of transaction happens between individuals and companies, but also among Municipalities and State-Owned Enterprises (SOEs) with private/public banks or lending agencies.
             </p>
             </aside>
 
-        <p>Para começar, podemos ver o tamanho da preocupação que a União tem com dívidas que ela pode ser chamada a assumir ou, em outras palavras, o valor das <span class="termo-destaque-lateral">garantias</span> concedidas pela União para empréstimos tomados por outros entes públicos.</p>
+        <p>Initially, we can see the size of the obligations the Federal Government has <span class="termo-destaque-lateral">guaranteed</span> from other entities.  In other words, what is the stock of the debt that could be assumed by the Federal Government if the guaranteed entities (mostly local governments and SOEs) fail to serve its original obligations?</p>
 
         <aside class="conteudo-destaque-lateral bottom">
-                <h4>Garantias</h4>
-                <p>Uma característica comum nesse mundo de dívida é a exigência de uma garantia. É natural que qualquer credor tenha receio de não receber o devido pagamento pelo valor emprestado. Em nosso contexto, portanto, alguns credores exigem a garantia da União para emprestar dinheiros para estados, municípios ou empresas estatais.</p>
+                <h4>Guarantees</h4>
+                <p>Guarantees are commonly used in debt schemes. The creditor is always prospecting the possibility of not fully receiving back the amount loaned to the debtor. In this context, some lenders may require the Federal Government to guarantee loans provided to subnational governments or State-Owned Enterprises.</p>
             </aside>
         </div>
 
@@ -67,8 +67,8 @@
 
     <section class="vis">
         <nav class="controle-vis">
-                <button id="geral" class="selected">Visão Geral</button>
-                <button id="tipo">Por tipo de entidade</button>
+                <button id="geral" class="selected">Overview</button>
+                <button id="tipo">By type of entity</button>
                 <button id="rank">Rank</button>
         </nav>
 
@@ -78,58 +78,58 @@
             <svg class="grafico-d3-svg"></svg>
             <div id="tooltip" class="hidden">
                 <p><strong id="tooltip-entidade"></strong></p>
-                <p>Categoria: <span id="tooltip-classificador"></span></p>
-                <p>Saldo Devedor das Garantias concedidas pela União: <span id="tooltip-valor"></span></p>
+                <p>Type of entity: <span id="tooltip-classificador"></span></p>
+                <p>Guaranteed debt: <span id="tooltip-valor"></span></p>
             </div>
         </div> 
-        <p class="caption limited-width">Os valores representam os saldos em abril de 2020. Fonte: Relatório Quadrimestral de Operações de Crédito Garantidas (RQG) do 1º quadrimestre de 2020.</p>
+        <p class="caption limited-width">Values in Apr-20 position. Source: <a href="https://www.tesourotransparente.gov.br/publicacoes/guaranteed-debt-report-gdr-ingles/" target="__blank">Guaranteed Debt Report (GRD) 1st Quarter 2020</a></p>
          
     </section>
 
     <section class="prose limited-width">
         <div class="container-grupo-com-quadro">
 
-        <p>Para a União, além de saber o tamanho das garantias concedidas, é importante monitorar quem são os beneficiários dessa garantia, ou seja, os <strong>mutuários</strong> da dívida, assim como as condições com que esses empréstimos foram tomados. Essas informações serão necessárias para avaliar o risco de quem pegou o dinheiro emprestado não pagar pelo que deve. E, em caso de inadimplência, a União será a responsável pelo <span class="termo-destaque-lateral">ressarcimento</span> ao respectivo credor.</p>
+        <p>For the Federal Government it’s relevant to monitor not only the outstanding guaranteed debt, but who are the original <strong>debtors</strong> as well as the terms and conditions of the original loans. This information is important to assess the risk of the debtors and to fulfill their obligations in case the <span class="termo-destaque-lateral">guarantee is called</span>.</p>
 
             <aside class="conteudo-destaque-lateral left">
-                <h4>Ressarcimento</h4>
-                <p>No caso de a União se deparar com a honra de uma garantia, a obrigação efetivamente se torna da União, como qualquer outra dívida em mercado lançada pelo Tesouro Nacional. Por isso, a dívida garantida constitui um passivo contingente da União. Após o pagamento da garantia dada ao credor, acionam-se as contragarantias previstas contratualmente para recuperação dos valores despendidos. Assim, o Tesouro monitora eventuais atrasos, estabelecendo prazos para regularização das pendências e alertando os devedores para as sanções, penalidades e consequências previstas nos contratos e na legislação.</p>
+                <h4>Calling a guarantee</h4>
+                <p>In this case, the National Treasury steps in as the guarantor and the responsibility for the original obligation is transferred to the Federal Government.  It becomes a debt like any other Treasury bond issued to the public. For that reason the guaranteed debt is one type of contingent liability for the Federal Government. After the guarantee is executed, the Treasury triggers the collateral according to contractual terms in order to recover the amounts paid to the creditor. To perform such task, the Treasury monitors eventual defaults, delays and establishes a period for the debtors to normalize the obligations alerting for penalties, sanctions and consequences of not paying a guaranteed debt. </p>
             </aside>
         </div>
 
-        <p>Para você, nesse primeiro momento, importa conhecer quais projetos de seu estado ou de seu município, ou mesmo de empresas estatais, são fruto de empréstimos obtidos de instituições financeiras em que há garantia concedida pela União. Se o fluxo de pagamento da dívida segue o cronograma previsto, não há que se falar em ingerência da União, mas disponibilizamos as informações que temos sobre os projetos para o caso de você se interessar por algum.</p> 
+        <p>At this point it is important to understand which projects from your state, municipality or even SOEs are funded by guaranteed loans. If the original debt cash flow is observed, the Federal Government is not required to act. We publish the available information about the project financed to provide transparency on the topic.</p> 
 
     </section>
 
     <section class="quadro">
         <div class="mini-header limited-width">
-            <h3 class="plot-title">Quadro: resumo dos principais valores</h2>
-            <p>Algumas definições importantes de termos que serão apresentados no quadro:</p>
+            <h3 class="plot-title">Table: Summary of main figures</h2>
+            <p>Some definitions are noteworthy:</p>
             <dl class="quadro-definicoes">
                 <dt>ATM</dt>
-                <dd>do inglês <dfn>average time to maturity</dfn>, representa a média dos prazos de vencimento da dívida do mutuário.</dd>
+                <dd>Average Time to Maturity, represents the average time of the incoming maturities for the debt owed by the debtors.</dd>
 
-                <dt>Custo médio</dt>
-                <dd>é o custo médio com o qual o mutuário teve de arcar para manter sua dívida nos últimos doze meses, sendo uma taxa medida em percentual ao ano.</dd>
+                <dt>Average cost</dt>
+                <dd>It is the 12-month cumulated average cost of the debt, represented as a percentage per year rate.</dd>
 
-                <dt>Interna</dt>
-                <dd>são as operações garantidas com origem do financiamento em credores internos e dívida denominada em reais.</dd>
+                <dt>Domestic</dt>
+                <dd>Guaranteed debt originated from domestic lenders and denominated in local currency (Ex: BRL).</dd>
 
-                <dt>Internas Cambiais</dt>
-                <dd>são as operações garantidas internas (em reais, portanto), com correção da dívida pela variação da taxa de câmbio.</dd>
+                <dt>Domestic-FX-linked</dt>
+                <dd>Guaranteed debt originated from domestic lenders and denominated in local currency but indexed to a foreign exchange rate (ex: USD/BRL).</dd>
 
-                <dt>Externa</dt>
-                <dd>são as operações garantidas com origem do financiamento em credores externos e dívida denominada em moeda estrangeira.</dd>
+                <dt>External</dt>
+                <dd>Guaranteed debt originated from external lenders and denominated in foreign currency (Ex: USD).</dd>
             </dl>
 
-            <p>Escolha o mutuário desejado. Se preferir, filtre por tipo de mutuário primeiro</p>
+            <p>Choose the debtor of your preference. You can use the filters to choose by type of entity first.</p>
             <div class="selecao-entidades">
                 <select name="menu-classificador" id="menu-classificador">
-                    <option value="">--Escolha um tipo de entidade--</option>
+                    <option value="">--Choose a type of entity--</option>
                 </select>
 
                 <select name="menu-entidade" id="menu-entidade">
-                    <option value="">--Escolha a entidade--</option>
+                    <option value="">--Choose the debtor--</option>
                 </select>
             </div>               
 
@@ -139,23 +139,23 @@
             <table>
                 <tbody>
                     <tr class="space-under destaque">
-                        <th scope="row">Operações Garantidas</td>
+                        <th scope="row">Total Guaranteed Debt</td>
                         <td id="total_total"></td>
                     </tr>
                     <tr class="border-under">
-                        <th scope="row">INTERNA</td>
+                        <th scope="row">DOMESTIC</td>
                         <td id="interna_total"></td>
                     </tr>  
                     <tr>
-                        <th class="indent" scope="row">Internas Cambiais</td>
+                        <th class="indent" scope="row">FX-Linked</td>
                         <td id="interna_cambial"></td>
                     </tr>  
                     <tr class="space-under">
-                        <th class="indent" scope="row">Internas Demais</td>
+                        <th class="indent" scope="row">Other</td>
                         <td id="interna_demais"></td>
                     </tr>
                     <tr class="border-under">
-                        <th scope="row">EXTERNA</td>
+                        <th scope="row">EXTERNAL</td>
                         <td id="externa_total"></td>
                     </tr>  
                     <tr class="space-above destaque">
@@ -163,31 +163,31 @@
                         <td id="ATM_Total"></td>
                     </tr>  
                     <tr class="space-above destaque">
-                        <th scope="row">Custo Médio</td>
+                        <th scope="row">Average Cost</td>
                         <td id="Custo_Total"></td>
                     </tr>                                                                        
                 </tbody>
             </table>
             <div class="area-grafico">
-                <p>Distribuição dos vencimentos</p>
+                <p>Maturity profile</p>
                 <div class="container-svg-card">
                     <svg class="card"></svg>
                 </div>
             </div>
         </div>
         <div class="mini-header lista-projetos limited-width">
-            <h3>Os empréstimos desse mutuário garantidos pela União</h3>
-            <p class="caption">Os valores mostrados na tabela são os valores originais do contrato. O total pode divergir dos valores do quadro acima, em que são exibidos os saldos atualizados em abril de 2020.</p>
-            <p class="caption">Os projetos marcados com uma borda <span style="color: crimson;">colorida</span> tiveram uma ou mais parcelas não pagas pelo mutuário, parcelas que foram <em>honradas</em> pelo Tesouro Nacional &mdash; esse é o assunto da próxima parte desta história.</p>
-            <p id="sem-projetos">Não há projetos para esse mutuário.</p>
+            <h3>Federal Guarantees for this debtor</h3>
+            <p class="caption">The values displayed in the table are the original contractual values. The total values can differ from the table above, which display the outstanding debt as of Apr-20.</p>
+            <p class="caption">The projects marked by a <span style="color: crimson;">colored borderline </span> have been object of default by the original debtor.  These defaulted installments were paid by the Federal Government &mdash;  see Part 2.</p>
+            <p id="sem-projetos">No projects for this debtor.</p>
             <table>    
                 <thead class="hidden">
                     <tr>
-                        <th scope="col" class="tab-projeto">Projeto</th>
-                        <th scope="col" class="tab-credor">Credor</th>
-                        <th scope="col" class="tab-moeda">Moeda</th>
-                        <th scope="col" class="tab-valor">Valor</th>
-                        <th scope="col" class="tab-data">Data de Assinatura</th>
+                        <th scope="col" class="tab-projeto">Project</th>
+                        <th scope="col" class="tab-credor">Creditor</th>
+                        <th scope="col" class="tab-moeda">Currency</th>
+                        <th scope="col" class="tab-valor">Contracted Amount</th>
+                        <th scope="col" class="tab-data">Signing Date</th>
                     </tr>
                 </thead>
                 <tbody class="hidden">
@@ -204,64 +204,41 @@
     </section>
     <section class="prose limited-width">  
 
-        <p>Por outro lado, a situação muda de figura quando os pagamentos não são realizados. Tem curiosidade?</p>
+        <p>Nonetheless the situation changes completely if the payments are not undertaken.  Are you curious about it?</p>
 
-        <p><a href="./honras" target="__blank">Parte 2 &mdash; As honras de garantias.</a></p>
+        <p><a href="./honras" target="__blank">Part 2 &mdash; Executed Guarantees.</a></p>
 
     </section>
 </main>
 <footer>
     <section class="anexo">
         <div class="limited-width">
-            <h2>Informações adicionais</h2>
+            <h2>Additional Information</h2>
 
-            <h3>Painel das Garantias Concedidas pela União</h3>
+            <h3>Federal Guarantees Deashboard</h3>
 
-            <p>Esse painel permite explorar as informações detalhadas disponíveis sobre as Garantias Concedidas pela União. Acesse o painel <a href="https://garantias.tesouro.gov.br/painel" target="__blank">aqui</a>.</p>
+            <p>This dashboard allows you to explore the details of issued guarantees. Click <a href="https://tesouronacional.shinyapps.io/guarantees/" target="__blank">here</a>.</p>
 
-            <h3>Relatórios do Tesouro Nacional sobre Garantias</h3>
+            <h3>Brazilian National Treasury Report on Guarantees</h3>
 
-            <p>O Tesouro Nacional disponibiliza diversos relatórios sobre garantias concedidas pela União:</p>
+            <p><strong><a href="https://www.tesourotransparente.gov.br/publicacoes/guaranteed-debt-report-gdr-ingles/2020/27" target="__blank">Guaranteed Debt Report – GDR (every 4 months)</a></strong> – presents the most relevant information on guaranteed debt such as: outstanding debt evolution, main creditors and debtors and executed guarantees.</p>
 
-            <p><strong><a href="https://www.tesourotransparente.gov.br/publicacoes/relatorio-quadrimestral-de-operacoes-de-credito-garantidas-rqg/" target="__blank">Relatório Quadrimestral de Operações de Crédito Garantidas (RQG)</a></strong> – apresenta as informações mais relevantes das operações de crédito com garantia da União, entre as quais: evolução dos saldos devedores dos contratos garantidos, principais credores e mutuários, e montante das garantias honradas.</p>
+            <h3>The Procedures to Authorize the Issuance of Federal Guarantees</h3>
 
-            <p><strong>Relatórios de Concessão de Garantias</strong> – apresentam quadrimestralmente as concessões de garantias para novas contratações de crédito realizadas durante o ano vigente. Estes relatórios estão disponíveis no Portal Tesouro Transparente, para concessão de garantias a operações de crédito <a href="http://www.tesourotransparente.gov.br/ckan/dataset/garantias-concedidas-em-operacoes-de-credito-internas" target="__blank">internas</a> e <a href="http://www.tesourotransparente.gov.br/ckan/dataset/garantias-concedidas-em-operacoes-de-credito" target="__blank">externas</a>.</p>
+            <p>To guide the beneficiaries (mostly local governments) in applying for federal guarantees, the Brazilian National Treasury created an online <a href="http://conteudo.tesouro.gov.br/mip" targe="_blank">“Instructions Manual” (MIP)</a>.  This manual establishes the necessary procedures to request a guarantee alongside the regulated limits and conditions.</p>
 
-            <p><strong><a href="https://www.tesourotransparente.gov.br/publicacoes/relatorio-mensal-de-garantias-honradas-rmgh/" target="__blank">Relatório Mensal de Garantias Honradas (RMGH)</a></strong> – apresenta mensalmente o montante honrado pela União, devido a inadimplências de mutuários em operações de crédito garantidas.</p>
-
-            <p>Além disso, o Relatório de Gestão Fiscal do Poder Executivo Federal, um relatório exigido pela Lei de Responsabilidade Fiscal, traz um demonstrativo de Garantias Concedidas. Todos os relatórios quadrimestrais estão disponíveis no site do Tesouro Nacional, <a href="https://www.tesouro.fazenda.gov.br/demonstrativos-fiscais#RGF" target = "_blank">neste link</a>.</p>
-
-            <h3>Mais informações sobre Garantias no site do Tesouro Nacional</h3>
-
-            <p><a href="https://www.tesouro.fazenda.gov.br/pt/-/concessao-de-garantia-pela-uniao" target="_blank">Concessão de Garantia pela União</a></p>
-
-            <p><a href="http://tesouro.gov.br/web/stn/portal-de-garantias-da-uniao" target="_blank">Portal de Garantias da União</a></p>
-
-            <p><a href="https://www.tesouro.fazenda.gov.br/pt/-/comite-de-garantias-cgr-" target="_blank">Comitê de Garantias (CGR)</a></p>
-
-            <p><a href="https://www.tesouro.fazenda.gov.br/pt/-/garantia-da-uniao-glossario" target="_blank">Glossário</a></p>
-
-            <p><a href="http://www.tesouro.fazenda.gov.br/pt/-/garantia-da-uniao-legislacao" target="_blank">Legislação</a></p>         
-          
-
-            <h3>Os fluxos de autorização de empréstimos</h3>
-
-            <p>Para orientar as prefeituras e governos estaduais, o Tesouro Nacional disponibiliza um <a href="http://conteudo.tesouro.gov.br/mip" targe="_blank">Manual para Instrução de Pleitos (MIP)</a>, que "regulamenta os procedimentos de instrução dos pedidos de verificação de limites e condições".</p>
-
-            <p>Os diagramas abaixo ilustram os processos de forma bastante simplificada:</p>
+            <p>The diagrams below illustrate the processes in a simple fashion:</p>
 
             <div class="imagens">
                 <img src="webpage/imgs/1.png" alt="Esquema do fluxo de autorização de empréstimos da União" style="margin-bottom: 1rem;">
                 <img src="webpage/imgs/2.png" alt="Esquema do fluxo de autorização de empréstimos da União">
             </div>
 
-            <p>Outras informações estão disponíveis <a href="http://www.tesouro.fazenda.gov.br/operacoes-de-credito-para-estados-e-municipios" target="_blank">nesta página</a> do site do Tesouro Nacional.</p>
-
-            <h3>Os dados e os códigos</h3>
+            <h3>Data and code</h3>
             
-            <p>Esta sequência de histórias foi escrita inteiramente com o uso de software livre e os padrões abertos da Web. Foram utilizadas as bibliotecas <a href="https://d3js.org/" target="_blank">d3.js</a> e <a href="https://github.com/russellgoldenberg/scrollama">scrollama</a>. A análise e preparação dos dados foi feita com <a href="https://cran.r-project.org/" target= "_blank">R</a>. Todos os códigos e dados estão disponíveis em <a href="https://github.com/tchiluanda/garantias" target="_blank">https://github.com/tchiluanda/garantias</a>.</p>
+            <p>Theses stories were "hand coed" entirely using open source tools and the Web Standards (HTML, CSS, SVG and Javascript). We used the libraries<a href="https://d3js.org/" target="_blank">d3.js</a> and <a href="https://github.com/russellgoldenberg/scrollama">scrollama</a>. Data analysis and preparation were made with <a href="https://cran.r-project.org/" target= "_blank">R</a>. Code and data are available on <a href="https://github.com/tesouro/guarantees" target="_blank">https://github.com/tesouro/guarantees</a>.</p>
 
-            <p>Em particular, os dados utilizados diretamente nesta página estão disponíveis <a href="https://github.com/tchiluanda/garantias/tree/master/webpage/dados" target="_blank">neste link</a>.</p>
+            <p>In particular, the data directly used in this page is available  <a href="https://github.com/tesouro/guarantees/tree/master/webpage/dados" target="_blank">here</a>.</p>
 
             <img src="webpage/imgs/tchiluanda.png" alt="logo do tchiluanda, o passarinho que representa o Grupo de Análise de Dados do Tesouro" class="logo-tchiluanda">
 
