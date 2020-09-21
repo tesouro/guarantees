@@ -1,0 +1,12 @@
+name: guarantees
+title: guarantees
+username:
+account: tesouronacional
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2852372
+bundleId: 3653066
+url: https://tesouronacional.shinyapps.io/guarantees/
+when: 1600704015.75652
+asMultiple: FALSE
+asStatic: FALSE
