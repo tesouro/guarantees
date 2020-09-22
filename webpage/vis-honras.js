@@ -174,6 +174,12 @@ Promise.all([
   // definindo a ordem das categorias
   const categorias = ["Estado do Rio de Janeiro", "Minas Gerais", "Demais entes"];
 
+  const cat_en = {
+    "Estado do Rio de Janeiro" : "Rio de Janeiro State", 
+    "Minas Gerais" : "Minas Gerais", 
+    "Demais entes" : "Other"
+  }
+
   // cria a função de stack com essa lista de categorias
   const stack = d3.stack()
     .keys(categorias)
@@ -569,7 +575,7 @@ Promise.all([
       .attr("text-anchor", "start")
       .style("font-weight", "bold")
       .classed("d3-honras-titulo-eixoY", true)
-      .text("Valores acumulados (R$ bi)");
+      .text("Cumulative amounts (R$ billion)");
   
   //////// demais elementos
 
@@ -668,7 +674,7 @@ Promise.all([
 
   honras_label_total
     .append("p")
-    .text("Total honrado pela União");
+    .text("Total paid by the Federal Government");
   honras_label_total  
     .append("p")
     .classed("labels-honras-valor", true)
@@ -803,7 +809,7 @@ Promise.all([
     .style("left", d => d.ponto_inicial.x + "px")
     .style("text-align", "right")
     .style("color", d => cor(d.key))
-    .text(d => d.key)
+    .text(d => cat_en[d.key])
     .style("opacity", 0);
 
   // labels arcos: ajusta posições
@@ -1138,7 +1144,7 @@ Promise.all([
         .attr("text-anchor", "start")
         .style("font-weight", "bold")
         .classed("d3-honras-titulo-eixoY", true)
-        .text("Valores acumulados (R$ bi)");
+        .text("Cumulative amounts (R$ billion)");
       }
   }
 
@@ -1180,7 +1186,7 @@ Promise.all([
         .attr("text-anchor", "start")
         .style("font-weight", "bold")
         .classed("d3-honras-titulo-eixoY", true)
-        .text("Valores mensais (R$ mi)");
+        .text("Monthly amounts (R$ million)");
 
     } else if (direcao == "up") {
 
@@ -1194,7 +1200,7 @@ Promise.all([
           .attr("text-anchor", "start")
           .style("font-weight", "bold")
           .classed("d3-honras-titulo-eixoY", true)
-          .text("Valores mensais (R$ mi)");
+          .text("Monthly amounts (R$ million)");
 
         $svg_honras
           .selectAll("g.d3-honras-barras-mensais")
@@ -1224,7 +1230,7 @@ Promise.all([
         .attr("text-anchor", "start")
         .style("font-weight", "bold")
         .classed("d3-honras-titulo-eixoY", true)
-        .text("Quantidade");
+        .text("Number of payments");
 
       $svg_honras
         .selectAll("g.d3-honras-barras-mensais")
